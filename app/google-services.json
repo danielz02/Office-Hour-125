@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "766058096834",
+    "firebase_url": "https://office-hour-125.firebaseio.com",
+    "project_id": "office-hour-125",
+    "storage_bucket": "office-hour-125.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:766058096834:android:8cc7646db3ae88aa74735b",
+        "android_client_info": {
+          "package_name": "edu.illinois.cs.cs125.fall2019.oh125"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "766058096834-vcvd4uth58537fjsfu25ebul9i0loj3t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.illinois.cs.cs125.fall2019.oh125",
+            "certificate_hash": "3bf03e8944c5fe5673a809ed12e78a2e6419235c"
+          }
+        },
+        {
+          "client_id": "766058096834-0jqmvfhe0qad167t0j6kst2mtrojcudp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD65p3hOB6CiY0-OGCCSnv814Xqukl943g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "766058096834-0jqmvfhe0qad167t0j6kst2mtrojcudp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
