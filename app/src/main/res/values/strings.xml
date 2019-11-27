@@ -13,4 +13,8 @@
     <string name="menu_tools">At 0403</string>
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
+
+    <string name="queue_request">Queue Request</string>
+    <string name="ta_reserve">TA Reserve</string>
+    <string name="staff_portal">Staff Portal</string>
 </resources>

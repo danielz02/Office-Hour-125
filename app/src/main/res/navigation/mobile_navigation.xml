@@ -13,15 +13,15 @@
 
     <fragment
         android:id="@+id/nav_gallery"
-        android:name="edu.illinois.cs.cs125.fall2019.oh125.ui.gallery.GalleryFragment"
+        android:name="edu.illinois.cs.cs125.fall2019.oh125.ui.queue.QueueFragment"
         android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        tools:layout="@layout/fragment_queue" />
 
     <fragment
         android:id="@+id/nav_slideshow"
-        android:name="edu.illinois.cs.cs125.fall2019.oh125.ui.slideshow.SlideshowFragment"
+        android:name="edu.illinois.cs.cs125.fall2019.oh125.ui.forecast.ForecastFragment"
         android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        tools:layout="@layout/fragment_forecast" />
 
     <fragment
         android:id="@+id/nav_tools"

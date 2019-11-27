@@ -7,7 +7,6 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
-import android.util.Log;
 import android.view.View;
 
 import androidx.navigation.NavController;
@@ -18,6 +17,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private FirebaseAuth mAuth;
+    private FirebaseFirestore firestore;
 
     /** A constant that can be passed by to onActivityResult to validate the result. */
     private static final int SIGN_IN_REQUEST = 1000;
@@ -66,7 +67,10 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+        // Initialize instance variable
         mAuth = FirebaseAuth.getInstance();
+        firestore = FirebaseFirestore.getInstance();
+
         if (mAuth.getCurrentUser() != null) {
             setUpUi();
             Toast.makeText(this, "Already Logged in",
@@ -112,18 +116,22 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Perform all the UI setup after user login
      */
-    public void setUpUi() {
+    private void setUpUi() {
+        // Get current FirebaseUser instance
         FirebaseUser currentUser = mAuth.getCurrentUser();
         String userEmailString = currentUser.getEmail();
+        // Retrieve navigation bar and TextView
         NavigationView navigationView = findViewById(R.id.nav_view);
         TextView userEmailView = navigationView.getHeaderView(0).findViewById(R.id.userEmail);
         userEmailView.setText(userEmailString);
+        TextView userNameView = navigationView.getHeaderView(0).findViewById(R.id.userName);
+        userNameView.setText(currentUser.getDisplayName());
     }
 
     /**
      * Prompt Firebase login UI
      */
-    public void loginPrompt() {
+    private void loginPrompt() {
         // Choose Email as authentication provider
         List<AuthUI.IdpConfig> providers = Arrays.asList(new AuthUI.IdpConfig.EmailBuilder().build());
         startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder()

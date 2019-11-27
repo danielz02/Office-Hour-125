@@ -1,4 +1,4 @@
-package edu.illinois.cs.cs125.fall2019.oh125.ui.gallery;
+package edu.illinois.cs.cs125.fall2019.oh125.ui.forecast;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,17 +14,17 @@ import androidx.lifecycle.ViewModelProviders;
 
 import edu.illinois.cs.cs125.fall2019.oh125.R;
 
-public class GalleryFragment extends Fragment {
+public class ForecastFragment extends Fragment {
 
-    private GalleryViewModel galleryViewModel;
+    private ForecastViewModel forecastViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        galleryViewModel =
-                ViewModelProviders.of(this).get(GalleryViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_gallery, container, false);
-        final TextView textView = root.findViewById(R.id.text_gallery);
-        galleryViewModel.getText().observe(this, new Observer<String>() {
+        forecastViewModel =
+                ViewModelProviders.of(this).get(ForecastViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_forecast, container, false);
+        final TextView textView = root.findViewById(R.id.text_slideshow);
+        forecastViewModel.getText().observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);

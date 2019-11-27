@@ -1,4 +1,4 @@
-package edu.illinois.cs.cs125.fall2019.oh125.ui.slideshow;
+package edu.illinois.cs.cs125.fall2019.oh125.ui.queue;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,17 +14,17 @@ import androidx.lifecycle.ViewModelProviders;
 
 import edu.illinois.cs.cs125.fall2019.oh125.R;
 
-public class SlideshowFragment extends Fragment {
+public class QueueFragment extends Fragment {
 
-    private SlideshowViewModel slideshowViewModel;
+    private QueueViewModel queueViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        slideshowViewModel =
-                ViewModelProviders.of(this).get(SlideshowViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_slideshow, container, false);
-        final TextView textView = root.findViewById(R.id.text_slideshow);
-        slideshowViewModel.getText().observe(this, new Observer<String>() {
+        queueViewModel =
+                ViewModelProviders.of(this).get(QueueViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_queue, container, false);
+        final TextView textView = root.findViewById(R.id.text_gallery);
+        queueViewModel.getText().observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
