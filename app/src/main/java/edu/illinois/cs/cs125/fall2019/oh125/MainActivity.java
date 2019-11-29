@@ -4,11 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import android.util.Log;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -25,6 +29,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
     private FirebaseAuth mAuth;
     private FirebaseFirestore firestore;
+    private Family125 user;
 
     /** A constant that can be passed by to onActivityResult to validate the result. */
     private static final int SIGN_IN_REQUEST = 1000;
@@ -72,9 +78,34 @@ public class MainActivity extends AppCompatActivity {
         firestore = FirebaseFirestore.getInstance();
 
         if (mAuth.getCurrentUser() != null) {
-            setUpUi();
             Toast.makeText(this, "Already Logged in",
                     Toast.LENGTH_SHORT).show();
+            try {
+                Task<Family125> task = Family125.getInstance(mAuth.getCurrentUser().getEmail());
+                task.addOnCompleteListener(this, new OnCompleteListener<Family125>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Family125> task) {
+                        if (task.isSuccessful()) {
+                            MainActivity.this.user = task.getResult();
+                            Toast.makeText(MainActivity.this, user.toString(),
+                                    Toast.LENGTH_SHORT).show();
+                            Log.i("Query Succeed", user.toString());
+                            setUpUi();
+                        } else {
+                            Log.e("Query Failed", task.getException().getMessage());
+                        }
+                    }
+                });
+                // Just for testing, remove later
+            } catch (NullPointerException e) {
+                Toast.makeText(this, "No record found",
+                        Toast.LENGTH_SHORT).show();
+                Log.e("Query Failed", "No record found");
+            } catch (IllegalArgumentException e) {
+                Toast.makeText(this, e.getMessage(),
+                        Toast.LENGTH_SHORT).show();
+                Log.e("Query Failed", "Illegal Email Address");
+            }
         } else {
             loginPrompt();
         }
@@ -103,8 +134,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // If the user has logged in, start MainActivity.
-        if (requestCode == SIGN_IN_REQUEST && resultCode == RESULT_OK) {
+        // If the user has logged in with @illinois.edu address, start MainActivity.
+        boolean isEmailValid = mAuth.getCurrentUser().getEmail().contains("@illinois.edu");
+        // 反人类设计， 但是我也没办法
+        if (requestCode == SIGN_IN_REQUEST && resultCode == RESULT_OK && !isEmailValid) {
+            Toast.makeText(this, "Non @illinois.edu Email Address!",
+                    Toast.LENGTH_SHORT).show();
+            mAuth.getCurrentUser().delete();
+            mAuth.signOut();
+            loginPrompt();
+        } else if (requestCode == SIGN_IN_REQUEST && resultCode == RESULT_OK) {
             Toast.makeText(this, "Authentication Succeed.",
                     Toast.LENGTH_SHORT).show();
             setUpUi();
@@ -126,6 +165,10 @@ public class MainActivity extends AppCompatActivity {
         userEmailView.setText(userEmailString);
         TextView userNameView = navigationView.getHeaderView(0).findViewById(R.id.userName);
         userNameView.setText(currentUser.getDisplayName());
+        if (this.user.getRole().equals("Student")) {
+            Button staffPortalButton = findViewById(R.id.staffPortal);
+            staffPortalButton.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -137,4 +180,5 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder()
                 .setAvailableProviders(providers).build(), SIGN_IN_REQUEST);
     }
+
 }
