@@ -95,7 +95,6 @@ public class Family125 {
     public static Task<Family125> getInstance(String userEmail) throws IllegalArgumentException {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String netId;
-        final Family125[] userInstance = new Family125[1];
         if (userEmail.contains("@illinois.edu")) {
             netId = userEmail.trim().split("@")[0];
         } else {

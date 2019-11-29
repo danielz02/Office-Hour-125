@@ -65,8 +65,8 @@ public class MainActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,
-                R.id.nav_tools, R.id.nav_share, R.id.nav_send)
+                R.id.nav_home, R.id.nav_queue, R.id.nav_forecast,
+                R.id.nav_status, R.id.nav_share, R.id.nav_send)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -136,7 +136,6 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         // If the user has logged in with @illinois.edu address, start MainActivity.
         boolean isEmailValid = mAuth.getCurrentUser().getEmail().contains("@illinois.edu");
-        // 反人类设计， 但是我也没办法
         if (requestCode == SIGN_IN_REQUEST && resultCode == RESULT_OK && !isEmailValid) {
             Toast.makeText(this, "Non @illinois.edu Email Address!",
                     Toast.LENGTH_SHORT).show();
@@ -167,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
         userNameView.setText(currentUser.getDisplayName());
         if (this.user.getRole().equals("Student")) {
             Button staffPortalButton = findViewById(R.id.staffPortal);
-            staffPortalButton.setVisibility(View.GONE);
+            staffPortalButton.setVisibility(View.INVISIBLE);
         }
     }
 
