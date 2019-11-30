@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/navGroup"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_menu_camera"
@@ -22,7 +24,7 @@
             android:title="@string/menu_status" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="@string/com_nav_group">
         <menu>
             <item
                 android:id="@+id/nav_share"

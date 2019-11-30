@@ -17,4 +17,8 @@
     <string name="queue_request">Queue Request</string>
     <string name="ta_reserve">TA Reserve</string>
     <string name="staff_portal">Staff Portal</string>
+    <string name="com_nav_group">Communicate</string>
+
+    <string name="logout">Logout</string>
+    <string name="cancel">Cancel</string>
 </resources>

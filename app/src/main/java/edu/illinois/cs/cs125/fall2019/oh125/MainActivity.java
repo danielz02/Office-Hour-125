@@ -1,5 +1,7 @@
 package edu.illinois.cs.cs125.fall2019.oh125;
 
+import android.app.ActionBar;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -10,9 +12,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AlertDialog;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -40,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private FirebaseAuth mAuth;
-    private FirebaseFirestore firestore;
     private Family125 user;
 
     /** A constant that can be passed by to onActivityResult to validate the result. */
@@ -75,11 +79,11 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize instance variable
         mAuth = FirebaseAuth.getInstance();
-        firestore = FirebaseFirestore.getInstance();
 
         if (mAuth.getCurrentUser() != null) {
             Toast.makeText(this, "Already Logged in",
                     Toast.LENGTH_SHORT).show();
+            Log.i("Authentication Succeed", mAuth.getCurrentUser().toString());
             try {
                 Task<Family125> task = Family125.getInstance(mAuth.getCurrentUser().getEmail());
                 task.addOnCompleteListener(this, new OnCompleteListener<Family125>() {
@@ -87,10 +91,10 @@ public class MainActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Family125> task) {
                         if (task.isSuccessful()) {
                             MainActivity.this.user = task.getResult();
-                            Toast.makeText(MainActivity.this, user.toString(),
+                            Toast.makeText(MainActivity.this, MainActivity.this.user.toString(),
                                     Toast.LENGTH_SHORT).show();
-                            Log.i("Query Succeed", user.toString());
                             setUpUi();
+                            Log.i("Query Succeed", user.toString());
                         } else {
                             Log.e("Query Failed", task.getException().getMessage());
                         }
@@ -116,6 +120,18 @@ public class MainActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.i("Selected", "ActionBar " + item.getItemId());
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                settingsDialog();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -145,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
         } else if (requestCode == SIGN_IN_REQUEST && resultCode == RESULT_OK) {
             Toast.makeText(this, "Authentication Succeed.",
                     Toast.LENGTH_SHORT).show();
-            setUpUi();
+            recreate();
         } else {
             loginPrompt();
         }
@@ -164,9 +180,9 @@ public class MainActivity extends AppCompatActivity {
         userEmailView.setText(userEmailString);
         TextView userNameView = navigationView.getHeaderView(0).findViewById(R.id.userName);
         userNameView.setText(currentUser.getDisplayName());
-        if (this.user.getRole().equals("Student")) {
+        if (!this.user.getRole().equals("Student")) {
             Button staffPortalButton = findViewById(R.id.staffPortal);
-            staffPortalButton.setVisibility(View.INVISIBLE);
+            staffPortalButton.setVisibility(View.VISIBLE);
         }
     }
 
@@ -178,6 +194,30 @@ public class MainActivity extends AppCompatActivity {
         List<AuthUI.IdpConfig> providers = Arrays.asList(new AuthUI.IdpConfig.EmailBuilder().build());
         startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder()
                 .setAvailableProviders(providers).build(), SIGN_IN_REQUEST);
+    }
+
+    /**
+     * Prompt settings AlertDialog
+     */
+    private void settingsDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setPositiveButton(R.string.logout,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Log.i("Logout", mAuth.getCurrentUser().getDisplayName() + " logged out");
+                        mAuth.signOut();
+                        MainActivity.this.recreate();
+                    }
+                })
+                .setNegativeButton(R.string.cancel,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Log.i("Logout", "Logout canceled");
+                            }
+                        });
+        builder.show();
     }
 
 }
