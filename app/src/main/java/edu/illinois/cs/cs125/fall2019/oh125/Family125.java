@@ -31,7 +31,7 @@ public class Family125 {
      * @param name The name of the person in Family125 instance.
      * @param role The role of the person, either being student, instructor, CA, or TA.
      * @param email The email of the person as a String.
-     * @param isAtOfficeHour he boolean expression indicating whether the person is at office hour.
+     * @param isAtOfficeHour The boolean expression indicating whether the person is at office hour.
      */
     public Family125(String name, String role, String email, boolean isAtOfficeHour) {
         this.name = name;
@@ -92,8 +92,8 @@ public class Family125 {
      * @return an instance of Task<Family125>
      * @throws IllegalArgumentException when the input is not an email address at all
      */
-    public static Task<Family125> getInstance(String userEmail) throws IllegalArgumentException {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+    public static Task<Family125> getInstance(final String userEmail) throws IllegalArgumentException {
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
         String netId;
         if (userEmail.contains("@illinois.edu")) {
             netId = userEmail.trim().split("@")[0];
@@ -113,9 +113,13 @@ public class Family125 {
         }).continueWith(new Continuation<DocumentSnapshot, Family125>() {
             @Override
             public Family125 then(Task<DocumentSnapshot> task) {
-                Family125 toReturn = task.getResult().toObject(Family125.class);
-                Log.i("Query Succeed", toReturn.toString());
-                return task.getResult().toObject(Family125.class);
+                String userRole = task.getResult().getString("role");
+                switch (userRole) {
+                    case "Student":
+                        return task.getResult().toObject(Student.class);
+                    default:
+                        return task.getResult().toObject(Family125.class);
+                }
             }
         });
     }
