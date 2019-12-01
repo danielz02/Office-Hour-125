@@ -24,7 +24,7 @@ public class Family125 {
     private boolean isAtOfficeHour;
 
     /** Dummy constructor. */
-    public Family125() {}
+    public Family125() { }
 
     /**
      *

@@ -4,20 +4,35 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Transaction;
 
-public class Student extends Family125 {
+public class Student extends Family125 implements SendQueue {
     /** The boolean value indicating whether a student is in queue. */
     private boolean isInQueue;
+
+    /** An instance of the inner class storing student's information about queue. */
+    private QueueInfo queueInfo;
+
+    private class QueueInfo {
+        private String category;
+        int estimatedTime;
+        int tableNumber;
+        int timeEntered;
+    }
+
+    /**
+     * Add current Student instance's QueueItem instance as an entry to the queue database in Firestore.
+     */
+    @Override
+    public void enterQueue() {
+
+    }
 
     /**
      * An empty constructor for Firebase Firestore.
