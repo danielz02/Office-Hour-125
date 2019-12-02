@@ -7,10 +7,14 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Transaction;
 
 
 public class Family125 {
@@ -20,26 +24,27 @@ public class Family125 {
     private String role;
     /** The email of the person as a String. */
     private String email;
+    /** The NetID of the Family125 instance, generated from @illinois.edu email. */
+    private String netId;
     /** The boolean expression indicating whether the person is at office hour. */
     private boolean isAtOfficeHour;
 
     /** Dummy constructor. */
-    public Family125() { }
+    Family125() { }
 
     /**
-     *
      * @param name The name of the person in Family125 instance.
      * @param role The role of the person, either being student, instructor, CA, or TA.
      * @param email The email of the person as a String.
      * @param isAtOfficeHour The boolean expression indicating whether the person is at office hour.
      */
-    public Family125(String name, String role, String email, boolean isAtOfficeHour) {
+    Family125(String name, String role, String email, boolean isAtOfficeHour) {
         this.name = name;
         this.role = role;
         this.email = email;
+        this.netId = email.split("@")[0];
         this.isAtOfficeHour = isAtOfficeHour;
     }
-
 
     /**
      * Getter for name String
@@ -61,7 +66,7 @@ public class Family125 {
      * Getter for isAtOfficeHour boolean
      * @return a boolean value indicating whether the person is at office hour.
      */
-    public boolean isAtOfficeHour() {
+    public boolean getIsAtOfficeHour() {
         return this.isAtOfficeHour;
     }
 
@@ -69,21 +74,57 @@ public class Family125 {
      * Setter for isAtOfficeHour
      * @param atOfficeHour the new boolean value indicating whether the person is at office hour.
      */
-    public void setIsAtOfficeHour(boolean atOfficeHour) {
+    public void setIsAtOfficeHour(final boolean atOfficeHour) {
         this.isAtOfficeHour = atOfficeHour;
+    }
+
+    public Task<Void> updateIsAtOfficeHour() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        //TODO: Fix the initialization of NetID and remove this temporary fix.
+        String netId = this.getEmail().split("@")[0];
+        final DocumentReference docRef = db.collection("user").document(netId);
+        return db.runTransaction(new Transaction.Function<Void>() {
+            @Override
+            public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
+                DocumentSnapshot snapshot = transaction.get(docRef);
+                transaction.update(docRef, "isAtOfficeHour", Family125.this.isAtOfficeHour);
+                return null;
+            }
+        }).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d("Firebase Update", "Transaction succeed!");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w("Firebase Update", e);
+            }
+        });
     }
 
     /**
      * Getter for email String.
-     * @return The email of the person as a String
+     * @return the email of the person as a String
      */
     public String getEmail() {
         return email;
     }
 
+    /**
+     * Getter for NetID String.
+     * @return the NetID for the instance as a String
+     */
+    public String getNetId() {
+        if (this.netId == null) {
+            this.netId = this.email.split("@")[0];
+        }
+        return this.netId;
+    }
+
     @Override @NonNull
     public String toString() {
-        return "Name: " + this.name + "; Email: " + this.email;
+        return "Name: " + this.getName() + "; NetID: " + this.getNetId();
     }
 
     /**
@@ -105,9 +146,9 @@ public class Family125 {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
-                    Log.i("Query Succeed", task.getResult().toString());
+                    Log.i("getInstance Query Succeed", task.getResult().toString());
                 } else {
-                    Log.e("Query Failed", task.getException().getMessage());
+                    Log.w("getInstance Query Failed", task.getException());
                 }
             }
         }).continueWith(new Continuation<DocumentSnapshot, Family125>() {
@@ -116,7 +157,24 @@ public class Family125 {
                 String userRole = task.getResult().getString("role");
                 switch (userRole) {
                     case "Student":
-                        return task.getResult().toObject(Student.class);
+                        final Student toReturn = task.getResult().toObject(Student.class);
+                        toReturn.initializeQueueInfo().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Log.i("Initialization Succeed", toReturn.getQueueInfo().toString());
+                                } else {
+                                    Log.w("Initialization Failed", task.getException());
+                                }
+                            }
+                        }).continueWith(new Continuation<Void, Student>() {
+                            @Override
+                            public Student then(@NonNull Task<Void> task) throws Exception {
+                                return toReturn;
+                            }
+                        });
+                    case "CA":
+                        return task.getResult().toObject(CA.class);
                     default:
                         return task.getResult().toObject(Family125.class);
                 }

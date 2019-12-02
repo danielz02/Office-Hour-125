@@ -80,8 +80,6 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         if (mAuth.getCurrentUser() != null) {
-            Toast.makeText(this, "Already Logged in",
-                    Toast.LENGTH_SHORT).show();
             Log.i("Authentication Succeed", mAuth.getCurrentUser().toString());
             try {
                 Task<Family125> task = Family125.getInstance(mAuth.getCurrentUser().getEmail());
@@ -91,23 +89,25 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             MainActivity.this.user = task.getResult();
                             Toast.makeText(MainActivity.this, MainActivity.this.user.toString(),
-                                    Toast.LENGTH_SHORT).show();
+                                    Toast.LENGTH_LONG).show();
                             setUpUi();
-                            Log.i("Query Succeed", user.toString());
+                            Log.i("User Info Query Succeed", user.toString());
+                            // TODO: Remove the test here
+                            if (MainActivity.this.user instanceof Student) {
+                                Toast.makeText(MainActivity.this, ((Student) MainActivity.this.user).getQueueInfo().toString(),
+                                        Toast.LENGTH_LONG).show();
+                                Log.i("Student Queue Info Query Succeed",
+                                        ((Student) user).getQueueInfo().toString());
+                                Log.i("User NetID", MainActivity.this.user.getNetId());
+                            }
                         } else {
-                            Log.e("Query Failed", task.getException().getMessage());
+                            Log.w("User Info Query Failed", task.getException());
                         }
                     }
                 });
                 // Just for testing, remove later
-            } catch (NullPointerException e) {
-                Toast.makeText(this, "No record found",
-                        Toast.LENGTH_SHORT).show();
-                Log.e("Query Failed", "No record found");
-            } catch (IllegalArgumentException e) {
-                Toast.makeText(this, e.getMessage(),
-                        Toast.LENGTH_SHORT).show();
-                Log.e("Query Failed", "Illegal Email Address");
+            } catch (Exception e) {
+                Log.w("User Info Query Failed", e);
             }
         } else {
             loginPrompt();

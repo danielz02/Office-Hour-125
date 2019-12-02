@@ -4,8 +4,9 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -19,12 +20,6 @@ public class Student extends Family125 implements SendQueue {
     /** An instance of the inner class storing student's information about queue. */
     private QueueInfo queueInfo;
 
-    private class QueueInfo {
-        private String category;
-        int estimatedTime;
-        int tableNumber;
-        int timeEntered;
-    }
 
     /**
      * Add current Student instance's QueueItem instance as an entry to the queue database in Firestore.
@@ -60,37 +55,64 @@ public class Student extends Family125 implements SendQueue {
     }
 
     /**
-     *
+     * Getter for isInQueue.
+     * @return a boolean value indicating whether the student is in queue
+     */
+    public boolean getIsInQueue() {
+        return this.isInQueue;
+    }
+
+    /**
+     * Setter for isInQueue.
      * @param inQueue The new queue status.
      */
     public void setIsInQueue(final boolean inQueue) {
-        isInQueue = inQueue;
+        this.isInQueue = inQueue;
+    }
+
+    public Task<Void> updateQueueStatus() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String netId = this.getEmail().split("@")[0];
         final DocumentReference docRef = db.collection("user").document(netId);
-        db.runTransaction(new Transaction.Function<Void>() {
+        return db.runTransaction(new Transaction.Function<Void>() {
             @Override
             public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
                 DocumentSnapshot snapshot = transaction.get(docRef);
-                transaction.update(docRef, "isInQueue", inQueue);
+                transaction.update(docRef, "isInQueue", Student.this.isInQueue);
                 return null;
-            }
-        }).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Log.d("Firebase Update", "Transaction succeed!");
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w("Firebase Update", e);
             }
         });
     }
 
+    /**
+     * Getter for QueueInfo
+     * @return the QueueInfo instance of the current student
+     */
+    public QueueInfo getQueueInfo() {
+        return this.queueInfo;
+    }
+
     @Override @NonNull
     public String toString() {
-        return "Student Name: " + this.getName() + "; Email: " + this.getEmail();
+        return "Student Name: " + this.getName() + "; Student NetID: " + this.getNetId();
+    }
+
+    public Task<Void> initializeQueueInfo() {
+        return QueueInfo.getInstance(this.getEmail()).addOnCompleteListener(new OnCompleteListener<QueueInfo>() {
+            @Override
+            public void onComplete(@NonNull Task<QueueInfo> task) {
+                if (task.isSuccessful()) {
+                    Student.this.queueInfo = task.getResult();
+                } else {
+                    Log.w("Queue Info Initialization Failed", task.getException());
+                }
+            }
+        }).continueWith(new Continuation<QueueInfo, Void>() {
+            @Override
+            public Void then(@NonNull Task<QueueInfo> task) throws Exception {
+                return null;
+            }
+        });
     }
 
 }
