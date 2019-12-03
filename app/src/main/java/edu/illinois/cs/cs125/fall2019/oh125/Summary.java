@@ -5,7 +5,6 @@ import com.google.android.gms.tasks.Task;
 public abstract class Summary implements OfficeHourSummary {
     /**
      * This method involves i Firebase Firestore request.
-     *
      * @return the total number of students present at Office Hour
      */
     @Override
@@ -15,7 +14,6 @@ public abstract class Summary implements OfficeHourSummary {
 
     /**
      * This method involves in Firebase Firestore request.
-     *
      * @return the total number of CA present at Office Hour.
      */
     @Override
@@ -25,7 +23,6 @@ public abstract class Summary implements OfficeHourSummary {
 
     /**
      * This method involves in Firebase Firestore request.
-     *
      * @return the total number of TAs present at Office Hour.
      */
     @Override

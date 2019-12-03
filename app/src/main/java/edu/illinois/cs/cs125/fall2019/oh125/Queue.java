@@ -1,7 +1,6 @@
 package edu.illinois.cs.cs125.fall2019.oh125;
 
 import com.google.android.gms.tasks.Task;
-
 import java.util.List;
 
 /**
