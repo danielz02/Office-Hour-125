@@ -2,14 +2,13 @@ package edu.illinois.cs.cs125.fall2019.oh125;
 
 import com.google.android.gms.tasks.Task;
 
-public abstract class Summary implements OfficeHourSummary {
+public abstract class Summary {
     /**
      * This method involves i Firebase Firestore request.
      *
      * @return the total number of students present at Office Hour
      */
-    @Override
-    public Task<Integer> getTotalStudent() {
+    public static Task<Integer> getTotalStudent() {
         return null;
     }
 
@@ -18,8 +17,8 @@ public abstract class Summary implements OfficeHourSummary {
      *
      * @return the total number of CA present at Office Hour.
      */
-    @Override
-    public Task<Integer> getTotalCA() {
+
+    public static Task<Integer> getTotalCA() {
         return null;
     }
 
@@ -28,8 +27,8 @@ public abstract class Summary implements OfficeHourSummary {
      *
      * @return the total number of TAs present at Office Hour.
      */
-    @Override
-    public Task<Integer> getTotalTA() {
+
+    public static Task<Integer> getTotalTA() {
         return null;
     }
 }

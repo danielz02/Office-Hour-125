@@ -11,6 +11,66 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/geoffOfficeHour"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/geoff_oh" />
+
+        <LinearLayout
+            android:id="@+id/student"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/totalStudent"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/total_student" />
+
+            <TextView
+                android:id="@+id/studentCount"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="0" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/staff"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/totalStaff"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/total_staff" />
+
+            <TextView
+                android:id="@+id/caCount"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="CA: 0" />
+
+            <TextView
+                android:id="@+id/taCount"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="TA:" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/here"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/here" />
+
         <Button
             android:id="@+id/queueRequestButton"
             android:layout_width="match_parent"
@@ -21,7 +81,8 @@
             android:id="@+id/taReserveButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/ta_reserve" />
+            android:text="@string/ta_reserve"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/staffPortal"
@@ -39,6 +100,7 @@
             android:layout_marginEnd="8dp"
             android:textAlignment="center"
             android:textSize="20sp" />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
