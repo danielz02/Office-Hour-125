@@ -1,5 +1,6 @@
 package edu.illinois.cs.cs125.fall2019.oh125.ui.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +22,9 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import edu.illinois.cs.cs125.fall2019.oh125.Family125;
 import edu.illinois.cs.cs125.fall2019.oh125.R;
+import edu.illinois.cs.cs125.fall2019.oh125.Summary;
+import edu.illinois.cs.cs125.fall2019.oh125.ui.queue.QueueActivity;
+import edu.illinois.cs.cs125.fall2019.oh125.ui.queue.QueueFragment;
 
 public class HomeFragment extends Fragment {
 
@@ -83,5 +87,53 @@ public class HomeFragment extends Fragment {
             Button staffPortalButton = getView().findViewById(R.id.staffPortal);
             staffPortalButton.setVisibility(View.VISIBLE);
         }
+
+        // Display number of students at Office Hour
+        Summary.getTotalStudent().addOnCompleteListener(new OnCompleteListener<Integer>() {
+            @Override
+            public void onComplete(@NonNull Task<Integer> task) {
+                if (task.isSuccessful()) {
+                    TextView studentCount = getView().findViewById(R.id.studentCount);
+                    studentCount.setText(task.getResult());
+                } else {
+                    Log.w("Query Failed", task.getException());
+                }
+            }
+        });
+
+        // Display number of CA at Office Hour
+        Summary.getTotalCA().addOnCompleteListener(new OnCompleteListener<Integer>() {
+            @Override
+            public void onComplete(@NonNull Task<Integer> task) {
+                if (task.isSuccessful()) {
+                    TextView caCount = getView().findViewById(R.id.caCount);
+                    caCount.setText("CA: " + task.getResult());
+                } else {
+                    Log.w("Query Failed", task.getException());
+                }
+            }
+        });
+
+        // Display number of TA at Office Hour
+        Summary.getTotalTA().addOnCompleteListener(new OnCompleteListener<Integer>() {
+            @Override
+            public void onComplete(@NonNull Task<Integer> task) {
+                if (task.isSuccessful()) {
+                    TextView taCount = getView().findViewById(R.id.taCount);
+                    taCount.setText("TA: " + task.getResult());
+                } else {
+                    Log.w("Query Failed", task.getException());
+                }
+            }
+        });
+
+        Button queue = getView().findViewById(R.id.queueRequestButton);
+        queue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), QueueActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }
