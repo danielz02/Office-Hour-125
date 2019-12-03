@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioGroup
+            android:id="@+id/getHelp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <RadioButton
+                android:id="@+id/MP"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="MP" />
+
+            <RadioButton
+                android:id="@+id/hw"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="HW" />
+
+        </RadioGroup>
+
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:ems="10"
+            android:inputType="time"
+            android:text="Estimated Time For Your Questions" />
+    </LinearLayout>
+
+</LinearLayout>

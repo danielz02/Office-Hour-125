@@ -107,7 +107,7 @@ public class HomeFragment extends Fragment {
             public void onComplete(@NonNull Task<Integer> task) {
                 if (task.isSuccessful()) {
                     TextView caCount = getView().findViewById(R.id.caCount);
-                    caCount.setText(task.getResult());
+                    caCount.setText("CA: " + task.getResult());
                 } else {
                     Log.w("Query Failed", task.getException());
                 }
@@ -120,7 +120,7 @@ public class HomeFragment extends Fragment {
             public void onComplete(@NonNull Task<Integer> task) {
                 if (task.isSuccessful()) {
                     TextView taCount = getView().findViewById(R.id.taCount);
-                    taCount.setText(task.getResult());
+                    taCount.setText("TA: " + task.getResult());
                 } else {
                     Log.w("Query Failed", task.getException());
                 }
