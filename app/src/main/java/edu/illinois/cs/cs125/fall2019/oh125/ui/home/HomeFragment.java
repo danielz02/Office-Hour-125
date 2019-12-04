@@ -94,7 +94,7 @@ public class HomeFragment extends Fragment {
         }
 
         // Display number of students at Office Hour
-        Summary.getTotalStudent().addOnCompleteListener(new OnCompleteListener<Integer>() {
+        Summary.getInstance().getTotalStudent().addOnCompleteListener(new OnCompleteListener<Integer>() {
             @Override
             public void onComplete(@NonNull Task<Integer> task) {
                 if (task.isSuccessful()) {
@@ -107,7 +107,7 @@ public class HomeFragment extends Fragment {
         });
 
         // Display number of CA at Office Hour
-        Summary.getTotalCA().addOnCompleteListener(new OnCompleteListener<Integer>() {
+        Summary.getInstance().getTotalCA().addOnCompleteListener(new OnCompleteListener<Integer>() {
             @Override
             public void onComplete(@NonNull Task<Integer> task) {
                 if (task.isSuccessful()) {
@@ -120,7 +120,7 @@ public class HomeFragment extends Fragment {
         });
 
         // Display number of TA at Office Hour
-        Summary.getTotalTA().addOnCompleteListener(new OnCompleteListener<Integer>() {
+        Summary.getInstance().getTotalTA().addOnCompleteListener(new OnCompleteListener<Integer>() {
             @Override
             public void onComplete(@NonNull Task<Integer> task) {
                 if (task.isSuccessful()) {

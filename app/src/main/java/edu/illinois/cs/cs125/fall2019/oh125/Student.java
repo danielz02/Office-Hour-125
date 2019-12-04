@@ -20,15 +20,6 @@ public class Student extends Family125 implements SendQueue {
     /** An instance of the inner class storing student's information about queue. */
     private QueueInfo queueInfo;
 
-
-    /**
-     * Add current Student instance's QueueItem instance as an entry to the queue database in Firestore.
-     */
-    @Override
-    public void enterQueue() {
-
-    }
-
     /**
      * An empty constructor for Firebase Firestore.
      */
@@ -45,6 +36,14 @@ public class Student extends Family125 implements SendQueue {
     public Student(String name, String role, String email, boolean isAtOfficeHour, boolean isInQueue) {
         super(name, role, email, isAtOfficeHour);
         this.isInQueue = isInQueue;
+    }
+
+    /**
+     * Add current Student instance's QueueItem instance as an entry to the queue database in Firestore.
+     */
+    @Override
+    public Task<Void> enterQueue() {
+        return null;
     }
 
     /**
@@ -88,7 +87,7 @@ public class Student extends Family125 implements SendQueue {
      * Getter for QueueInfo
      * @return the QueueInfo instance of the current student
      */
-    public QueueInfo getQueueInfo() {
+    QueueInfo getQueueInfo() {
         return this.queueInfo;
     }
 
@@ -97,7 +96,7 @@ public class Student extends Family125 implements SendQueue {
         return "Student Name: " + this.getName() + "; Student NetID: " + this.getNetId();
     }
 
-    public Task<Void> initializeQueueInfo() {
+    Task<Void> initializeQueueInfo() {
         return QueueInfo.getInstance(this.getEmail()).addOnCompleteListener(new OnCompleteListener<QueueInfo>() {
             @Override
             public void onComplete(@NonNull Task<QueueInfo> task) {
