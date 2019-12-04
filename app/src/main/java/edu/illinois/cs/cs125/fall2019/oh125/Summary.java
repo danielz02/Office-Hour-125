@@ -1,6 +1,15 @@
 package edu.illinois.cs.cs125.fall2019.oh125;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public abstract class Summary {
     /**
@@ -8,7 +17,28 @@ public abstract class Summary {
      * @return the total number of students present at Office Hour
      */
     public static Task<Integer> getTotalStudent() {
-        return null;
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        return db.collection("user")
+                .whereEqualTo("role", "Student")
+                .whereEqualTo("isAtOfficeHour", true)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document: task.getResult()) {
+                                Log.i("Student Query Succeed", document.getData().toString());
+                            }
+                        } else {
+                            Log.w("Student Count Query Failed", task.getException());
+                        }
+                    }
+                }).continueWith(new Continuation<QuerySnapshot, Integer>() {
+            @Override
+            public Integer then(@NonNull Task<QuerySnapshot> task) {
+                return task.getResult().size();
+            }
+        });
     }
 
     /**
@@ -17,7 +47,28 @@ public abstract class Summary {
      */
 
     public static Task<Integer> getTotalCA() {
-        return null;
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        return db.collection("user")
+                .whereEqualTo("role", "CA")
+                .whereEqualTo("isAtOfficeHour", true)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document: task.getResult()) {
+                                Log.i("Student Query Succeed", document.getData().toString());
+                            }
+                        } else {
+                            Log.w("Student Count Query Failed", task.getException());
+                        }
+                    }
+                }).continueWith(new Continuation<QuerySnapshot, Integer>() {
+                    @Override
+                    public Integer then(@NonNull Task<QuerySnapshot> task) {
+                        return task.getResult().size();
+                    }
+                });
     }
 
     /**
@@ -26,6 +77,27 @@ public abstract class Summary {
      */
 
     public static Task<Integer> getTotalTA() {
-        return null;
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        return db.collection("user")
+                .whereEqualTo("role", "TA")
+                .whereEqualTo("isAtOfficeHour", true)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document: task.getResult()) {
+                                Log.i("Student Query Succeed", document.getData().toString());
+                            }
+                        } else {
+                            Log.w("Student Count Query Failed", task.getException());
+                        }
+                    }
+                }).continueWith(new Continuation<QuerySnapshot, Integer>() {
+                    @Override
+                    public Integer then(@NonNull Task<QuerySnapshot> task) {
+                        return task.getResult().size();
+                    }
+                });
     }
 }
