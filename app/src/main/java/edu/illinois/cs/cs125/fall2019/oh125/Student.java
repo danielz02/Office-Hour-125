@@ -3,21 +3,30 @@ package edu.illinois.cs.cs125.fall2019.oh125;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Transaction;
 
+import java.io.FileNotFoundException;
+import java.nio.file.FileAlreadyExistsException;
+import java.util.Date;
+
 public class Student extends Family125 implements SendQueue {
+
     /** The boolean value indicating whether a student is in queue. */
     private boolean isInQueue;
 
     /** An instance of the inner class storing student's information about queue. */
+    @Nullable
     private QueueInfo queueInfo;
 
     /**
@@ -40,10 +49,66 @@ public class Student extends Family125 implements SendQueue {
 
     /**
      * Add current Student instance's QueueItem instance as an entry to the queue database in Firestore.
+     *
+     * @param category      The category of students' question, either being MP or Homework
+     * @param estimatedTime The estimated time of the current session, in minutes
+     * @param table         The number of student's current table
+     * @return An Android task of Void type
+     * @throws IllegalArgumentException when category is not either MP or Homework
      */
     @Override
-    public Task<Void> enterQueue() {
-        return null;
+    public Task<Void> enterQueue(String category,
+                                 int estimatedTime,
+                                 int table) throws IllegalArgumentException, FileAlreadyExistsException {
+        if (estimatedTime < 0) {
+            throw new IllegalArgumentException("Invalid Time: " + estimatedTime);
+        } else if (estimatedTime > 10) {
+            throw new IllegalArgumentException("Your Requested Time"
+                    + "(" + estimatedTime + " minutes) " + "is too Long!");
+        } else if (table < 0 || table > 5) {
+            throw new IllegalArgumentException("Table number is invalid: " + table);
+        } else if (this.queueInfo != null) {
+            throw new FileAlreadyExistsException("Your are already in queue!");
+            // I'm too lazy to create a customized exception.
+            // Please display a alert dialogue to let the user to decide whether to exit queue and
+            // make a new request.
+        }
+        Timestamp timeEntered = new Timestamp(new Date(Long.parseLong(FieldValue.serverTimestamp().toString())));
+        this.queueInfo = new QueueInfo(category, estimatedTime, table, timeEntered);
+        Log.i("Queue Info Created", queueInfo.toString());
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        return db.collection("queue")
+                .add(queueInfo)
+                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentReference> task) {
+                        if (task.isSuccessful()) {
+                            Log.i("Enter Queue Succeed", task.getResult().toString());
+                        } else {
+                            Log.w("Enter Queue Failed", task.getException());
+                        }
+                    }
+                }).continueWith(new Continuation<DocumentReference, Void>() {
+                    @Override
+                    public Void then(@NonNull Task<DocumentReference> task) {
+                        return null;
+                    }
+                });
+    }
+
+    /**
+     * Delete current student's record in the queue
+     * @return An Android task of type Void
+     */
+    @Override
+    public Task<Void> exitQueue() throws FileNotFoundException {
+        if (this.queueInfo == null) {
+            throw new FileNotFoundException("User is not in queue! No need to exit!");
+        }
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        return db.collection("queue")
+                .document(this.getNetId())
+                .delete();
     }
 
     /**

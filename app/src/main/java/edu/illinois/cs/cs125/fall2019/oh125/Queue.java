@@ -1,6 +1,9 @@
 package edu.illinois.cs.cs125.fall2019.oh125;
 
 import com.google.android.gms.tasks.Task;
+
+import java.io.FileNotFoundException;
+import java.nio.file.FileAlreadyExistsException;
 import java.util.List;
 
 /**
@@ -9,8 +12,23 @@ import java.util.List;
 interface SendQueue {
     /**
      * Add current Student instance's QueueItem instance as an entry to the queue database in Firestore.
+     * @param category The category of students' question, either being MP or Homework
+     * @param estimatedTime The estimated time of the current session, in minutes
+     * @param table The number of student's current table
+     * @return An Android task of Void type
+     * @throws IllegalArgumentException when category is not either MP or Homework
+     * @throws FileAlreadyExistsException when current student already has an entry of QueueInfo
      */
-    public Task<Void> enterQueue();
+    public Task<Void> enterQueue(String category,
+                                 int estimatedTime,
+                                 int table) throws IllegalArgumentException, FileAlreadyExistsException;
+
+    /**
+     * Delete current student's record in the queue
+     * @return An Android task of type Void
+     * @throws FileNotFoundException when current user doesn't even have a QueueInfo instance
+     */
+    public Task<Void> exitQueue() throws FileNotFoundException;
 }
 
 /**

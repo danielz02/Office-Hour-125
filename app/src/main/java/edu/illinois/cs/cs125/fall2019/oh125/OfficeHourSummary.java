@@ -3,6 +3,8 @@ package edu.illinois.cs.cs125.fall2019.oh125;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.ListenerRegistration;
 
+import java.util.List;
+
 /**
  * This interface defines the behavior of Summary class
  */
@@ -24,6 +26,13 @@ public interface OfficeHourSummary {
      * @return the total number of TAs present at Office Hour.
      */
     public Task<Integer> getTotalTA();
+
+    /**
+     * This method involves in Firestore request and return a list containing the information about
+     * current queue.
+     * @return an Android task of a list of all QueueInfo items
+     */
+    public Task<List<QueueInfo>> getQueue();
 
     /**
      * This method helps create change listener according to user input

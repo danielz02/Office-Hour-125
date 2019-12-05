@@ -162,7 +162,12 @@ public class Family125 {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
-                                    Log.i("Initialization Succeed", toReturn.getQueueInfo().toString());
+                                    try {
+                                        Log.i("Initialization Succeed", toReturn.getQueueInfo().toString());
+                                    } catch (NullPointerException e) {
+                                        Log.w("Student not in queue", e);
+                                    }
+
                                 } else {
                                     Log.w("Initialization Failed", task.getException());
                                 }
