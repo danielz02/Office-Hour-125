@@ -99,7 +99,7 @@ public class HomeFragment extends Fragment {
             public void onComplete(@NonNull Task<Integer> task) {
                 if (task.isSuccessful()) {
                     TextView studentCount = view.findViewById(R.id.studentCount);
-                    studentCount.setText(task.getResult());
+                    studentCount.setText(String.valueOf(task.getResult()));
                 } else {
                     Log.w("Total Student Display Failed", task.getException());
                 }
@@ -112,7 +112,8 @@ public class HomeFragment extends Fragment {
             public void onComplete(@NonNull Task<Integer> task) {
                 if (task.isSuccessful()) {
                     TextView caCount = view.findViewById(R.id.caCount);
-                    caCount.setText("CA: " + task.getResult());
+                    caCount.setText(String.format(getResources().getString(R.string.ca_count),
+                            task.getResult()));
                 } else {
                     Log.w("Total CA Display Failed", task.getException());
                 }
@@ -125,7 +126,8 @@ public class HomeFragment extends Fragment {
             public void onComplete(@NonNull Task<Integer> task) {
                 if (task.isSuccessful()) {
                     TextView taCount = view.findViewById(R.id.taCount);
-                    taCount.setText("TA: " + task.getResult());
+                    taCount.setText(String.format(getResources().getString(R.string.ta_count),
+                            task.getResult()));
                 } else {
                     Log.w("Total TA Display Failed", task.getException());
                 }
