@@ -37,7 +37,7 @@ public class CA extends Family125 implements ManageQueue {
      * @param student the Student instance to be kicked out from the queue
      */
     @Override
-    public void endQueue(Student student) {
-
+    public Task<Void> endQueue(Student student) {
+        return null;
     }
 }
