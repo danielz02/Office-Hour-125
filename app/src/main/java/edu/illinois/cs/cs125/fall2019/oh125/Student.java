@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
@@ -77,6 +78,7 @@ public class Student extends Family125 implements SendQueue {
         this.queueInfo = new QueueInfo(category, estimatedTime, table, timeEntered);
         Log.i("Queue Info Created", queueInfo.toString());
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        this.setIsInQueue(false);
         return db.collection("queue")
                 .add(queueInfo)
                 .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
@@ -91,6 +93,16 @@ public class Student extends Family125 implements SendQueue {
                 }).continueWith(new Continuation<DocumentReference, Void>() {
                     @Override
                     public Void then(@NonNull Task<DocumentReference> task) {
+                        updateQueueStatus().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Log.i("Queue Status Updated", task.getResult().toString());
+                                } else {
+                                    Log.w("Queue Status Update Failed", task.getException());
+                                }
+                            }
+                        });
                         return null;
                     }
                 });
@@ -106,17 +118,27 @@ public class Student extends Family125 implements SendQueue {
             throw new FileNotFoundException("User is not in queue! No need to exit!");
         }
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        this.setIsInQueue(false);
         return db.collection("queue")
                 .document(this.getNetId())
-                .delete();
+                .delete().continueWith(new Continuation<Void, Void>() {
+                    @Override
+                    public Void then(@NonNull Task<Void> task) throws Exception {
+                        updateQueueStatus().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Log.i("Exited Queue", task.getResult().toString());
+                                } else {
+                                    Log.w("Exit Failed", task.getException());
+                                }
+                            }
+                        });
+                        return null;
+                    }
+                });
     }
 
-    /**
-     * @return The boolean value indicate whether the current student is in queue.
-     */
-    public boolean isInQueue() {
-        return isInQueue;
-    }
 
     /**
      * Getter for isInQueue.
