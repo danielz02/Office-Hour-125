@@ -30,7 +30,9 @@ public class Family125 implements OfficeHourStatus {
     private boolean isAtOfficeHour;
 
     /** Dummy constructor. */
-    Family125() { }
+    Family125() {
+        Log.i("Object instantiated", "dummy constructor is called!");
+    }
 
     /**
      * @param name The name of the person in Family125 instance.
@@ -110,7 +112,7 @@ public class Family125 implements OfficeHourStatus {
      * Getter for email String.
      * @return the email of the person as a String
      */
-    String getEmail() {
+    public String getEmail() {
         return this.email;
     }
 
@@ -118,7 +120,7 @@ public class Family125 implements OfficeHourStatus {
      * Getter for NetID String.
      * @return the NetID for the instance as a String
      */
-    String getNetId() {
+    public String getNetId() {
         if (this.netId == null) {
             this.netId = this.email.split("@")[0];
         }
@@ -161,6 +163,7 @@ public class Family125 implements OfficeHourStatus {
                 switch (userRole) {
                     case "Student":
                         final Student toReturn = task.getResult().toObject(Student.class);
+                        Log.i("Student instance initialized", toReturn.toString());
                         toReturn.initializeQueueInfo().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
