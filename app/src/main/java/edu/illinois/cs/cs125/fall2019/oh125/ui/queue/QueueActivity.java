@@ -1,6 +1,9 @@
 package edu.illinois.cs.cs125.fall2019.oh125.ui.queue;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RadioGroup;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,18 +16,25 @@ public class QueueActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.queue_request);
 
-        RadioGroup getHelp = findViewById(R.id.getHelp);
-//        if (getHelp.getCheckedRadioButtonId() == R.id.mp) {
-//
-//        } else if (getHelp.getCheckedRadioButtonId() == R.id.hw) {
-//
-//        }
+        Button submit = findViewById(R.id.sumbitTask);
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditText table = findViewById(R.id.table);
+                EditText time = findViewById(R.id.time);
+                RadioGroup getHelp = findViewById(R.id.getHelp);
 
+                int tableNum = Integer.parseInt(table.getText().toString());
+                int estimatedTime = Integer.parseInt(time.getText().toString());
+
+                String category;
+                if (getHelp.getCheckedRadioButtonId() == R.id.mp) {
+                    category = "MP";
+                } else {
+                    category = "HW";
+                }
+                // add info to queue
+            }
+        });
     }
-
-//    private void addTask() {
-//
-//    }
-
-
 }
