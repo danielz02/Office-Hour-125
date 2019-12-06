@@ -17,7 +17,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Transaction;
 
 
-public class Family125 {
+public class Family125 implements OfficeHourStatus {
     /** The name of the person in Family125 instance. */
     private String name;
     /** The role of the person, either being student, instructor, CA, or TA. */
@@ -78,10 +78,13 @@ public class Family125 {
         this.isAtOfficeHour = atOfficeHour;
     }
 
-    public Task<Void> updateIsAtOfficeHour() {
+    /**
+     * This method will update the Firestore database according to current instance's isAtOfficeHour
+     * @return an Android Task of Void type
+     */
+    public Task<Void> updateOfficeHourStatus() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        //TODO: Fix the initialization of NetID and remove this temporary fix.
-        String netId = this.getEmail().split("@")[0];
+        String netId = this.getNetId();
         final DocumentReference docRef = db.collection("user").document(netId);
         return db.runTransaction(new Transaction.Function<Void>() {
             @Override
@@ -107,15 +110,15 @@ public class Family125 {
      * Getter for email String.
      * @return the email of the person as a String
      */
-    public String getEmail() {
-        return email;
+    String getEmail() {
+        return this.email;
     }
 
     /**
      * Getter for NetID String.
      * @return the NetID for the instance as a String
      */
-    public String getNetId() {
+    String getNetId() {
         if (this.netId == null) {
             this.netId = this.email.split("@")[0];
         }
