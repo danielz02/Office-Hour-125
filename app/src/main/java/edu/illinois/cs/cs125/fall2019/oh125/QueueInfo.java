@@ -7,9 +7,11 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ServerTimestamp;
 
 public class QueueInfo {
     /** The category of queue request, either being MP, Homework, or Exam. */
@@ -19,7 +21,7 @@ public class QueueInfo {
     /** The number of the table the student is current sitting. */
     private int table;
     /** The unix timestamp of the time when the student entered the queue. */
-    private int timeEntered;
+    private Timestamp timeEntered;
 
     /** The dummy constructor for Firebase Firestore. */
     public QueueInfo() { }
@@ -31,7 +33,7 @@ public class QueueInfo {
      * @param tableNumber The number of the table the student is current sitting.
      * @param timeEntered The unix timestamp of the time when the student entered the queue.
      */
-    public QueueInfo(String category, int estimatedTime, int tableNumber, int timeEntered) {
+    QueueInfo(String category, int estimatedTime, int tableNumber, Timestamp timeEntered) {
         this.category = category;
         this.estimatedTime = estimatedTime;
         this.table = tableNumber;
@@ -50,7 +52,7 @@ public class QueueInfo {
         return table;
     }
 
-    public int getTimeEntered() {
+    public Timestamp getTimeEntered() {
         return timeEntered;
     }
 
@@ -64,7 +66,7 @@ public class QueueInfo {
                 '}';
     }
 
-    public static Task<QueueInfo> getInstance(String email) {
+    static Task<QueueInfo> getInstance(String email) {
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         //TODO: Fix the initialization of NetID and remove this temporary fix.
         String netId = email.split("@")[0];
@@ -86,3 +88,4 @@ public class QueueInfo {
         });
     }
 }
+
