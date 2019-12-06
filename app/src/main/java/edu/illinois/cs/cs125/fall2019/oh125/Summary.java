@@ -15,6 +15,7 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Summary implements OfficeHourSummary {
@@ -142,12 +143,34 @@ public class Summary implements OfficeHourSummary {
     /**
      * This method involves in Firestore request and return a list containing the information about
      * current queue.
-     * TODO: Implement this method
      * @return an Android task of a list of all QueueInfo items
      */
     @Override
     public Task<List<QueueInfo>> getQueue() {
-        return null;
+        return this.db.collection("queue")
+                .orderBy("timeEntered")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Log.i("Queue Collection Query Succeed", task.getResult().toString());
+                        } else {
+                            Log.w("Queue Collection Query Failed", task.getException());
+                        }
+                    }
+                }).continueWith(new Continuation<QuerySnapshot, List<QueueInfo>>() {
+                    @Override
+                    public List<QueueInfo> then(@NonNull Task<QuerySnapshot> task) {
+                        List<QueueInfo> queueInfoList = new ArrayList<>();
+                        for (QueryDocumentSnapshot document: task.getResult()) {
+                            QueueInfo currentQueueInfo = document.toObject(QueueInfo.class);
+                            queueInfoList.add(currentQueueInfo);
+                            Log.i("Instantiating QueueInfo: ", currentQueueInfo.toString());
+                        }
+                        return queueInfoList;
+                    }
+                });
     }
 
     /**
