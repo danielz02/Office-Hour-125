@@ -173,7 +173,7 @@ public class Student extends Family125 implements SendQueue {
      * @return the QueueInfo instance of the current student
      */
     @Nullable
-    QueueInfo getQueueInfo() {
+    public QueueInfo getQueueInfo() {
         return this.queueInfo;
     }
 
