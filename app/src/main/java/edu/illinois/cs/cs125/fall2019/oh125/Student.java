@@ -36,7 +36,7 @@ public class Student extends Family125 implements SendQueue {
     public Student() { }
 
     /**
-     * The
+     * The parametrized constructor for Student class.
      * @param name The name of the student.
      * @param role The role of the student. In this case it must be a student.
      * @param email The email of the student as a String.
@@ -50,7 +50,6 @@ public class Student extends Family125 implements SendQueue {
 
     /**
      * Add current Student instance's QueueItem instance as an entry to the queue database in Firestore.
-     *
      * @param category      The category of students' question, either being MP or Homework
      * @param estimatedTime The estimated time of the current session, in minutes
      * @param table         The number of student's current table
@@ -78,7 +77,7 @@ public class Student extends Family125 implements SendQueue {
         this.queueInfo = new QueueInfo(category, estimatedTime, table, timeEntered);
         Log.i("Queue Info Created", queueInfo.toString());
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        this.setIsInQueue(false);
+        this.setIsInQueue(true);
         return db.collection("queue")
                 .add(queueInfo)
                 .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
@@ -152,13 +151,13 @@ public class Student extends Family125 implements SendQueue {
      * Setter for isInQueue.
      * @param inQueue The new queue status.
      */
-    public void setIsInQueue(final boolean inQueue) {
+    void setIsInQueue(final boolean inQueue) {
         this.isInQueue = inQueue;
     }
 
-    public Task<Void> updateQueueStatus() {
+    Task<Void> updateQueueStatus() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        String netId = this.getEmail().split("@")[0];
+        String netId = this.getNetId();
         final DocumentReference docRef = db.collection("user").document(netId);
         return db.runTransaction(new Transaction.Function<Void>() {
             @Override
@@ -174,6 +173,7 @@ public class Student extends Family125 implements SendQueue {
      * Getter for QueueInfo
      * @return the QueueInfo instance of the current student
      */
+    @Nullable
     QueueInfo getQueueInfo() {
         return this.queueInfo;
     }
