@@ -139,11 +139,6 @@ public class Summary implements OfficeHourSummary {
                 });
     }
 
-    @Override
-    public Task<List<QueueInfo>> getQueue() {
-        return null;
-    }
-
     /**
      * This method involves in Firestore request and return a list containing the information about
      * current queue.
