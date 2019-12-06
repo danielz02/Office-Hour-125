@@ -11,7 +11,9 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.ServerTimestamp;
+
+import java.text.DateFormat;
+import java.util.Locale;
 
 public class QueueInfo {
     /** The category of queue request, either being MP, Homework, or Exam. */
@@ -54,6 +56,11 @@ public class QueueInfo {
 
     public Timestamp getTimeEntered() {
         return timeEntered;
+    }
+
+    public String getHumanTime() {
+        DateFormat formatter =  DateFormat.getTimeInstance(DateFormat.SHORT, Locale.ENGLISH);
+        return formatter.format(this.timeEntered);
     }
 
     @Override @NonNull
