@@ -16,6 +16,8 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.List;
+
 public class Summary implements OfficeHourSummary {
     /** The Firestore database instance to retrieve data. */
     private FirebaseFirestore db;
@@ -70,10 +72,10 @@ public class Summary implements OfficeHourSummary {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document: task.getResult()) {
-                                Log.i("Student Query Succeed", document.getData().toString());
+                                Log.i("CA Query Succeed", document.getData().toString());
                             }
                         } else {
-                            Log.w("Student Count Query Failed", task.getException());
+                            Log.w("CA Count Query Failed", task.getException());
                         }
                     }
                 }).continueWith(new Continuation<QuerySnapshot, Integer>() {
@@ -99,10 +101,10 @@ public class Summary implements OfficeHourSummary {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document: task.getResult()) {
-                                Log.i("Student Query Succeed", document.getData().toString());
+                                Log.i("TA Query Succeed", document.getData().toString());
                             }
                         } else {
-                            Log.w("Student Count Query Failed", task.getException());
+                            Log.w("TA Count Query Failed", task.getException());
                         }
                     }
                 }).continueWith(new Continuation<QuerySnapshot, Integer>() {
@@ -136,6 +138,17 @@ public class Summary implements OfficeHourSummary {
                         }
                     }
                 });
+    }
+
+    /**
+     * This method involves in Firestore request and return a list containing the information about
+     * current queue.
+     * TODO: Implement this method
+     * @return an Android task of a list of all QueueInfo items
+     */
+    @Override
+    public Task<List<QueueInfo>> getQueue() {
+        return null;
     }
 
     /**
