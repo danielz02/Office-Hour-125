@@ -10,7 +10,7 @@ interface SendQueue {
     /**
      * Add current Student instance's QueueItem instance as an entry to the queue database in Firestore.
      */
-    public void enterQueue();
+    public Task<Void> enterQueue();
 }
 
 /**
@@ -29,6 +29,6 @@ interface ManageQueue {
      * Used at the end of one CA session.
      * @param student the Student instance to be kicked out from the queue
      */
-    public void endQueue(Student student);
-
+    public Task<Void> endQueue(Student student);
 }
+

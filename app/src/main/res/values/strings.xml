@@ -23,6 +23,8 @@
     <string name="geoff_oh">Geoff\'s Office Hour: Wednesday and Friday 1\-3pm</string>
     <string name="total_student">Total Student Number: </string>
     <string name="total_staff">Total CA/TA Number: </string>
+    <string name="ca_count">CA: %1$d</string>
+    <string name="ta_count">TA: %1$d</string>
 
     <string name="logout">Logout</string>
     <string name="cancel">Cancel</string>

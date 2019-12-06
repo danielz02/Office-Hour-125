@@ -46,6 +46,11 @@ public class HomeFragment extends Fragment {
         // Initialize instance variable
         mAuth = FirebaseAuth.getInstance();
 
+        return root;
+    }
+
+    @Override
+    public void onViewCreated(final View view, final Bundle savedInstanceState) {
         if (mAuth.getCurrentUser() != null) {
             Toast.makeText(HomeFragment.this.getContext(), "Already Logged in",
                     Toast.LENGTH_SHORT).show();
@@ -56,10 +61,10 @@ public class HomeFragment extends Fragment {
                     public void onComplete(@NonNull Task<Family125> task) {
                         if (task.isSuccessful()) {
                             HomeFragment.this.user = task.getResult();
-                            setUpUi();
                             Toast.makeText(HomeFragment.this.getContext(), user.toString(),
                                     Toast.LENGTH_SHORT).show();
                             Log.i("Query Succeed", user.toString());
+                            setUpUi(view);
                         } else {
                             Log.e("Query Failed", task.getException().getMessage());
                         }
@@ -76,16 +81,16 @@ public class HomeFragment extends Fragment {
                 Log.e("Query Failed", "Illegal Email Address");
             }
         }
-        return root;
     }
+
 
     /**
      * Perform all the UI setup after user login
      */
-    private void setUpUi() {
+    private void setUpUi(final View view) {
         if (!this.user.getRole().equals("Student")) {
             // If the user is not student, then set staffPortal page visible.
-            Button staffPortalButton = getView().findViewById(R.id.staffPortal);
+            Button staffPortalButton = view.findViewById(R.id.staffPortal);
             staffPortalButton.setVisibility(View.VISIBLE);
             // Set queue request button invisible
             Button queue = getView().findViewById(R.id.queueRequestButton);
@@ -103,40 +108,42 @@ public class HomeFragment extends Fragment {
         }
 
         // Display number of students at Office Hour
-        Summary.getTotalStudent().addOnCompleteListener(new OnCompleteListener<Integer>() {
+        Summary.getInstance().getTotalStudent().addOnCompleteListener(new OnCompleteListener<Integer>() {
             @Override
             public void onComplete(@NonNull Task<Integer> task) {
                 if (task.isSuccessful()) {
-                    TextView studentCount = getView().findViewById(R.id.studentCount);
-                    studentCount.setText(task.getResult());
+                    TextView studentCount = view.findViewById(R.id.studentCount);
+                    studentCount.setText(String.valueOf(task.getResult()));
                 } else {
-                    Log.w("Query Failed", task.getException());
+                    Log.w("Total Student Display Failed", task.getException());
                 }
             }
         });
 
         // Display number of CA at Office Hour
-        Summary.getTotalCA().addOnCompleteListener(new OnCompleteListener<Integer>() {
+        Summary.getInstance().getTotalCA().addOnCompleteListener(new OnCompleteListener<Integer>() {
             @Override
             public void onComplete(@NonNull Task<Integer> task) {
                 if (task.isSuccessful()) {
-                    TextView caCount = getView().findViewById(R.id.caCount);
-                    caCount.setText("CA: " + task.getResult());
+                    TextView caCount = view.findViewById(R.id.caCount);
+                    caCount.setText(String.format(getResources().getString(R.string.ca_count),
+                            task.getResult()));
                 } else {
-                    Log.w("Query Failed", task.getException());
+                    Log.w("Total CA Display Failed", task.getException());
                 }
             }
         });
 
         // Display number of TA at Office Hour
-        Summary.getTotalTA().addOnCompleteListener(new OnCompleteListener<Integer>() {
+        Summary.getInstance().getTotalTA().addOnCompleteListener(new OnCompleteListener<Integer>() {
             @Override
             public void onComplete(@NonNull Task<Integer> task) {
                 if (task.isSuccessful()) {
-                    TextView taCount = getView().findViewById(R.id.taCount);
-                    taCount.setText("TA: " + task.getResult());
+                    TextView taCount = view.findViewById(R.id.taCount);
+                    taCount.setText(String.format(getResources().getString(R.string.ta_count),
+                            task.getResult()));
                 } else {
-                    Log.w("Query Failed", task.getException());
+                    Log.w("Total TA Display Failed", task.getException());
                 }
             }
         });

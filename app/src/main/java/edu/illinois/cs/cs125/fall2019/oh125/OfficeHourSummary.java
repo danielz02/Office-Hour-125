@@ -1,6 +1,7 @@
 package edu.illinois.cs.cs125.fall2019.oh125;
 
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.ListenerRegistration;
 
 /**
  * This interface defines the behavior of Summary class
@@ -23,4 +24,11 @@ public interface OfficeHourSummary {
      * @return the total number of TAs present at Office Hour.
      */
     public Task<Integer> getTotalTA();
+
+    /**
+     * This method helps create change listener according to user input
+     * @param type the number of student/CA/TA you want to register listener for
+     * @return a listener for the input type
+     */
+    public ListenerRegistration getChangeListener(String type);
 }
