@@ -8,7 +8,6 @@ import androidx.annotation.Nullable;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -138,6 +137,11 @@ public class Summary implements OfficeHourSummary {
                         }
                     }
                 });
+    }
+
+    @Override
+    public Task<List<QueueInfo>> getQueue() {
+        return null;
     }
 
     /**
