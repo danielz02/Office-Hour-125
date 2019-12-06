@@ -17,7 +17,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Transaction;
 
 
-public class Family125 {
+public class Family125 implements OfficeHourStatus {
     /** The name of the person in Family125 instance. */
     private String name;
     /** The role of the person, either being student, instructor, CA, or TA. */
@@ -30,7 +30,9 @@ public class Family125 {
     private boolean isAtOfficeHour;
 
     /** Dummy constructor. */
-    Family125() { }
+    Family125() {
+        Log.i("Object instantiated", "dummy constructor is called!");
+    }
 
     /**
      * @param name The name of the person in Family125 instance.
@@ -78,10 +80,13 @@ public class Family125 {
         this.isAtOfficeHour = atOfficeHour;
     }
 
-    public Task<Void> updateIsAtOfficeHour() {
+    /**
+     * This method will update the Firestore database according to current instance's isAtOfficeHour
+     * @return an Android Task of Void type
+     */
+    public Task<Void> updateOfficeHourStatus() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        //TODO: Fix the initialization of NetID and remove this temporary fix.
-        String netId = this.getEmail().split("@")[0];
+        String netId = this.getNetId();
         final DocumentReference docRef = db.collection("user").document(netId);
         return db.runTransaction(new Transaction.Function<Void>() {
             @Override
@@ -108,7 +113,7 @@ public class Family125 {
      * @return the email of the person as a String
      */
     public String getEmail() {
-        return email;
+        return this.email;
     }
 
     /**
@@ -158,6 +163,7 @@ public class Family125 {
                 switch (userRole) {
                     case "Student":
                         final Student toReturn = task.getResult().toObject(Student.class);
+                        Log.i("Student instance initialized", toReturn.toString());
                         toReturn.initializeQueueInfo().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {

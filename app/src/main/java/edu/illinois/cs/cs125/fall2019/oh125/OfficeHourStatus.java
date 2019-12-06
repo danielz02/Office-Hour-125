@@ -50,3 +50,14 @@ interface ManageQueue {
     public Task<Void> endQueue(Student student);
 }
 
+/**
+ * This interfaces define the behavior regarding the presence in office hour
+ * of any instance of Family 125.
+ */
+interface OfficeHourStatus {
+    /**
+     * This method will update the Firestore database according to current instance's isAtOfficeHour
+     * @return an Android Task of Void type
+     */
+    public Task<Void> updateOfficeHourStatus();
+}

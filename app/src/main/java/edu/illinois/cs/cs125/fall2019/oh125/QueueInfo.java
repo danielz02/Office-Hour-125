@@ -75,7 +75,6 @@ public class QueueInfo {
 
     static Task<QueueInfo> getInstance(String email) {
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        //TODO: Fix the initialization of NetID and remove this temporary fix.
         String netId = email.split("@")[0];
         DocumentReference docRef = db.collection("queue").document(netId);
         return docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -84,7 +83,7 @@ public class QueueInfo {
                 if (task.isSuccessful()) {
                     Log.i("Queue Info Query Succeed", task.getResult().toString());
                 } else {
-                    Log.w("Query Failed", task.getException());
+                    Log.w("Queue Info Query Failed", task.getException());
                 }
             }
         }).continueWith(new Continuation<DocumentSnapshot, QueueInfo>() {
