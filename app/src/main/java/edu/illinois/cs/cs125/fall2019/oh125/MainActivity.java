@@ -91,8 +91,8 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(MainActivity.this, MainActivity.this.user.toString(),
                                     Toast.LENGTH_LONG).show();
                             setUpUi();
-                            Log.i("User Info Query Succeed", user.toString());
-                            // TODO: Remove the test here
+                            Log.i("Current User Info Query Succeed", user.toString());
+                            // TODO: Fix the polymorphism
                             if (MainActivity.this.user instanceof Student) {
                                 Toast.makeText(MainActivity.this, ((Student) MainActivity.this.user).getQueueInfo().toString(),
                                         Toast.LENGTH_LONG).show();
