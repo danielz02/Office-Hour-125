@@ -32,16 +32,16 @@ public class StaffPortal extends AppCompatActivity {
         CA.getInstance(email).addOnCompleteListener(new OnCompleteListener<Family125>() {
             @Override
             public void onComplete(@NonNull Task<Family125> task) {
-                CA ca = (CA) task.getResult();
-                // Get list of students in Queue
-                List<Student> students = ca.getQueue().getResult();
-                if (Summary.getInstance().getQueue().isComplete()) {
-                    loadTasks(students);
+                if (task.isSuccessful()) {
+                    CA ca = (CA) task.getResult();
+                    // Get list of students in Queue
+                    List<Student> students = ca.getQueue().getResult();
+                    if (Summary.getInstance().getQueue().isComplete()) {
+                        loadTasks(students);
+                    }
                 }
             }
         });
-
-
     }
 
     private void loadTasks(List<Student> students) {
