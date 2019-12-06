@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         if (mAuth.getCurrentUser() != null) {
-            Log.i("Authentication Succeed", mAuth.getCurrentUser().toString());
+            Log.i("Authentication Succeed", mAuth.getCurrentUser().getEmail());
             try {
                 Task<Family125> task = Family125.getInstance(mAuth.getCurrentUser().getEmail());
                 task.addOnCompleteListener(this, new OnCompleteListener<Family125>() {
@@ -105,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 });
-                // Just for testing, remove later
             } catch (Exception e) {
                 Log.w("User Info Query Failed", e);
             }
@@ -191,7 +190,8 @@ public class MainActivity extends AppCompatActivity {
     private void loginPrompt() {
         // Choose Email as authentication provider
         List<AuthUI.IdpConfig> providers = Arrays.asList(new AuthUI.IdpConfig.EmailBuilder().build());
-        startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder()
+        startActivityForResult(AuthUI.getInstance()
+                .createSignInIntentBuilder()
                 .setAvailableProviders(providers).build(), SIGN_IN_REQUEST);
     }
 
@@ -204,9 +204,19 @@ public class MainActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Log.i("Logout", mAuth.getCurrentUser().getDisplayName() + " logged out");
-                        mAuth.signOut();
-                        MainActivity.this.recreate();
+                        AuthUI.getInstance()
+                                .signOut(getApplicationContext())
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            mAuth.signOut();
+                                            MainActivity.this.recreate();
+                                        } else {
+                                            Log.w("log out failed", task.getException());
+                                        }
+                                    }
+                                });
                     }
                 })
                 .setNegativeButton(R.string.cancel,
