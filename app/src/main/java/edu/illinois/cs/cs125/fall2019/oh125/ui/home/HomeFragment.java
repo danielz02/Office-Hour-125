@@ -89,8 +89,22 @@ public class HomeFragment extends Fragment {
      */
     private void setUpUi(final View view) {
         if (!this.user.getRole().equals("Student")) {
+            // If the user is not student, then set staffPortal page visible.
             Button staffPortalButton = view.findViewById(R.id.staffPortal);
             staffPortalButton.setVisibility(View.VISIBLE);
+            // Set queue request button invisible
+            Button queue = getView().findViewById(R.id.queueRequestButton);
+            queue.setVisibility(View.GONE);
+        } else {
+            // When student press queue request button, start queue request activity
+            Button queue = getView().findViewById(R.id.queueRequestButton);
+            queue.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getActivity(), QueueActivity.class);
+                    startActivity(intent);
+                }
+            });
         }
 
         // Display number of students at Office Hour
@@ -131,15 +145,6 @@ public class HomeFragment extends Fragment {
                 } else {
                     Log.w("Total TA Display Failed", task.getException());
                 }
-            }
-        });
-
-        Button queue = view.findViewById(R.id.queueRequestButton);
-        queue.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), QueueActivity.class);
-                startActivity(intent);
             }
         });
     }
