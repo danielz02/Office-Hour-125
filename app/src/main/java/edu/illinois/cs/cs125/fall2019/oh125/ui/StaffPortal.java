@@ -55,7 +55,7 @@ public class StaffPortal extends AppCompatActivity {
             String name = student.getName();
             String category = info.getCategory();
             String estimatedTime = "" + info.getEstimatedTime();
-            String tableNum = "" + info.getTable();
+            String tableNum = "Table #" + info.getTable();
             String enteredTime = "" + info.getTimeEntered();
 
             // Get all text views in chunk_task

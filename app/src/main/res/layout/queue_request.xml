@@ -39,7 +39,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:ems="10"
-            android:hint="Estimated Time (min)"
+            android:hint="Estimated Time (0-10min)"
             android:inputType="time" />
 
         <EditText
@@ -48,7 +48,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:ems="10"
-            android:hint="Your Table Number"
+            android:hint="Your Table Number (0-5)"
             android:inputType="number" />
     </LinearLayout>
 
