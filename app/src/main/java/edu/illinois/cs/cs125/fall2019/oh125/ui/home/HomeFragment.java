@@ -146,7 +146,7 @@ public class HomeFragment extends Fragment {
                         if (e != null) {
                             Log.w("Listen Error for Total Student Number", e);
                         } else {
-                            int newCount = queryDocumentSnapshots.getDocumentChanges().size();
+                            int newCount = queryDocumentSnapshots.getDocuments().size();
                             TextView studentCount = view.findViewById(R.id.studentCount);
                             studentCount.setText(String.valueOf(newCount));
                         }
@@ -178,7 +178,7 @@ public class HomeFragment extends Fragment {
                         if (e != null) {
                             Log.w("Listen Error for Total CA Number", e);
                         } else {
-                            int newCount = queryDocumentSnapshots.getDocumentChanges().size();
+                            int newCount = queryDocumentSnapshots.getDocuments().size();
                             TextView caCount = view.findViewById(R.id.caCount);
                             caCount.setText(String.format(getResources().getString(R.string.ca_count),
                                     newCount));
@@ -211,9 +211,9 @@ public class HomeFragment extends Fragment {
                         if (e != null) {
                             Log.w("Listen Error for Total TA Number", e);
                         } else {
-                            int newCount = queryDocumentSnapshots.getDocumentChanges().size();
+                            int newCount = queryDocumentSnapshots.getDocuments().size();
                             TextView caCount = view.findViewById(R.id.taCount);
-                            caCount.setText(String.format(getResources().getString(R.string.ca_count),
+                            caCount.setText(String.format(getResources().getString(R.string.ta_count),
                                     newCount));
                         }
                     }
