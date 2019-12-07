@@ -160,33 +160,15 @@ public class Family125 implements OfficeHourStatus {
             @Override
             public Family125 then(Task<DocumentSnapshot> task) {
                 String userRole = task.getResult().getString("role");
+                Log.i("User Role", userRole);
                 switch (userRole) {
-                    case "Student":
-                        final Student toReturn = task.getResult().toObject(Student.class);
-                        Log.i("Student instance initialized", toReturn.toString());
-                        toReturn.initializeQueueInfo().addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    try {
-                                        Log.i("Initialization Succeed", toReturn.getQueueInfo().toString());
-                                    } catch (NullPointerException e) {
-                                        Log.w("Student not in queue", e);
-                                    }
-
-                                } else {
-                                    Log.w("Initialization Failed", task.getException());
-                                }
-                            }
-                        }).continueWith(new Continuation<Void, Student>() {
-                            @Override
-                            public Student then(@NonNull Task<Void> task) {
-                                return toReturn;
-                            }
-                        });
                     case "CA":
                         Log.i("CA instance initialized", task.getResult().toObject(CA.class).toString());
                         return task.getResult().toObject(CA.class);
+                    case "Student":
+                        final Student toReturn = task.getResult().toObject(Student.class);
+                        Log.i("Student instance initialized", toReturn.toString());
+                        return toReturn;
                     default:
                         return null;
                 }

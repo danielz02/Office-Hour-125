@@ -171,13 +171,31 @@ public class MainActivity extends AppCompatActivity {
         userEmailView.setText(userEmailString);
         TextView userNameView = navigationView.getHeaderView(0).findViewById(R.id.userName);
         userNameView.setText(currentUser.getDisplayName());
-        // TODO: Fix the polymorphism
         if (this.user instanceof Student) {
-            Toast.makeText(this, ((Student) user).getQueueInfo().toString(),
-                    Toast.LENGTH_LONG).show();
-            Log.i("Student Queue Info Query Succeed",
-                    ((Student) this.user).getQueueInfo().toString());
-            Log.i("User NetID", this.user.getNetId());
+            final Student userAsStudent = (Student) this.user;
+            userAsStudent.initializeQueueInfo()
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            try {
+                                Log.i("Initialization Succeed",
+                                        userAsStudent.getQueueInfo().toString());
+                                Toast.makeText(getApplicationContext(),
+                                        userAsStudent.getQueueInfo().toString(),
+                                        Toast.LENGTH_LONG).show();
+                                Log.i("Student Queue Info Query Succeed",
+                                        userAsStudent.getQueueInfo().toString());
+                                Log.i("User NetID", userAsStudent.getNetId());
+                            } catch (NullPointerException e) {
+                                Log.w("Student not in queue", e);
+                            }
+
+                        } else {
+                            Log.w("Initialization Failed", task.getException());
+                        }
+                    }
+                });
         }
         if (!this.user.getRole().equals("Student")) {
             Button staffPortalButton = findViewById(R.id.staffPortal);
