@@ -1,7 +1,20 @@
 package edu.illinois.cs.cs125.fall2019.oh125;
 
-import com.google.android.gms.tasks.Task;
+import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CA extends Family125 implements ManageQueue {
@@ -28,7 +41,46 @@ public class CA extends Family125 implements ManageQueue {
      */
     @Override
     public Task<List<Student>> getQueue() {
-        return null;
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        return db.collection("user")
+                .whereEqualTo("role", "Student")
+                .whereEqualTo("isInQueue", true)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Log.i("getQueue Finished Fetching Students",
+                                    task.getResult().toString());
+                        } else {
+                            Log.w("getQueue Failed",
+                                    "Fetching students failed",
+                                    task.getException());
+                        }
+                    }
+                }).continueWith(new Continuation<QuerySnapshot, List<Student>>() {
+                    @Override
+                    public List<Student> then(@NonNull Task<QuerySnapshot> task) {
+                        List<Student> studentsInQueue = new ArrayList<>();
+                        for (DocumentSnapshot document: task.getResult()) {
+                            studentsInQueue.add(document.toObject(Student.class));
+                        }
+                        return studentsInQueue;
+                    }
+                }).continueWith(new Continuation<List<Student>, List<Student>>() {
+                    @Override
+                    public List<Student> then(@NonNull Task<List<Student>> task) {
+                        for (Student studentInQueue: task.getResult()) {
+                            studentInQueue.initializeQueueInfo()
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) { }
+                                    });
+                        }
+                        Log.i("getQueue Succeed", task.getResult().toString());
+                        return task.getResult();
+                    }
+        });
     }
 
     /**
@@ -36,8 +88,18 @@ public class CA extends Family125 implements ManageQueue {
      * Used at the end of one CA session.
      * @param student the Student instance to be kicked out from the queue
      */
-    @Override
+    @Override @Nullable
     public Task<Void> endQueue(Student student) {
+        try {
+            return student.exitQueue();
+        } catch (FileNotFoundException e) {
+            Log.w("endQueue Failed", e);
+        }
         return null;
+    }
+
+    @Override @NonNull
+    public String toString() {
+        return "CA{} " + super.toString();
     }
 }

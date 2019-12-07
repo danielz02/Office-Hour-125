@@ -88,18 +88,11 @@ public class MainActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Family125> task) {
                         if (task.isSuccessful()) {
                             MainActivity.this.user = task.getResult();
-                            Toast.makeText(MainActivity.this, MainActivity.this.user.toString(),
+                            Toast.makeText(MainActivity.this,
+                                    MainActivity.this.user.toString(),
                                     Toast.LENGTH_LONG).show();
                             setUpUi();
-                            Log.i("User Info Query Succeed", user.toString());
-                            // TODO: Remove the test here
-                            if (MainActivity.this.user instanceof Student) {
-                                Toast.makeText(MainActivity.this, ((Student) MainActivity.this.user).getQueueInfo().toString(),
-                                        Toast.LENGTH_LONG).show();
-                                Log.i("Student Queue Info Query Succeed",
-                                        ((Student) user).getQueueInfo().toString());
-                                Log.i("User NetID", MainActivity.this.user.getNetId());
-                            }
+                            Log.i("Current User Info Query Succeed", user.toString());
                         } else {
                             Log.w("User Info Query Failed", task.getException());
                         }
@@ -178,6 +171,32 @@ public class MainActivity extends AppCompatActivity {
         userEmailView.setText(userEmailString);
         TextView userNameView = navigationView.getHeaderView(0).findViewById(R.id.userName);
         userNameView.setText(currentUser.getDisplayName());
+        if (this.user instanceof Student) {
+            final Student userAsStudent = (Student) this.user;
+            userAsStudent.initializeQueueInfo()
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            try {
+                                Log.i("Initialization Succeed",
+                                        userAsStudent.getQueueInfo().toString());
+                                Toast.makeText(getApplicationContext(),
+                                        userAsStudent.getQueueInfo().toString(),
+                                        Toast.LENGTH_LONG).show();
+                                Log.i("Student Queue Info Query Succeed",
+                                        userAsStudent.getQueueInfo().toString());
+                                Log.i("User NetID", userAsStudent.getNetId());
+                            } catch (NullPointerException e) {
+                                Log.w("Student not in queue", e);
+                            }
+
+                        } else {
+                            Log.w("Initialization Failed", task.getException());
+                        }
+                    }
+                });
+        }
         if (!this.user.getRole().equals("Student")) {
             Button staffPortalButton = findViewById(R.id.staffPortal);
             staffPortalButton.setVisibility(View.VISIBLE);
