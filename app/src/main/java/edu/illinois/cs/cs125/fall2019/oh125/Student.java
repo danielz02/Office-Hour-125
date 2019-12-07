@@ -32,7 +32,9 @@ public class Student extends Family125 implements SendQueue {
     /**
      * An empty constructor for Firebase Firestore.
      */
-    public Student() { }
+    public Student() {
+        Log.i("Student Object instantiated", "dummy constructor is called!");
+    }
 
     /**
      * The parametrized constructor for Student class.
