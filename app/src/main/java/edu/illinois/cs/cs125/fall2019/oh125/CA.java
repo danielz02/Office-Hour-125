@@ -97,4 +97,9 @@ public class CA extends Family125 implements ManageQueue {
         }
         return null;
     }
+
+    @Override @NonNull
+    public String toString() {
+        return "CA{} " + super.toString();
+    }
 }

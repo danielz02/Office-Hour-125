@@ -31,7 +31,7 @@ public class Family125 implements OfficeHourStatus {
 
     /** Dummy constructor. */
     Family125() {
-        Log.i("Object instantiated", "dummy constructor is called!");
+        Log.i("Family125 Object instantiated", "dummy constructor is called!");
     }
 
     /**
@@ -180,14 +180,15 @@ public class Family125 implements OfficeHourStatus {
                             }
                         }).continueWith(new Continuation<Void, Student>() {
                             @Override
-                            public Student then(@NonNull Task<Void> task) throws Exception {
+                            public Student then(@NonNull Task<Void> task) {
                                 return toReturn;
                             }
                         });
                     case "CA":
+                        Log.i("CA instance initialized", task.getResult().toObject(CA.class).toString());
                         return task.getResult().toObject(CA.class);
                     default:
-                        return task.getResult().toObject(Family125.class);
+                        return null;
                 }
             }
         });

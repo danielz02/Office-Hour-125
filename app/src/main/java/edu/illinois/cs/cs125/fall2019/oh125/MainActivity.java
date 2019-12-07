@@ -88,18 +88,11 @@ public class MainActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Family125> task) {
                         if (task.isSuccessful()) {
                             MainActivity.this.user = task.getResult();
-                            Toast.makeText(MainActivity.this, MainActivity.this.user.toString(),
+                            Toast.makeText(MainActivity.this,
+                                    MainActivity.this.user.toString(),
                                     Toast.LENGTH_LONG).show();
                             setUpUi();
                             Log.i("Current User Info Query Succeed", user.toString());
-                            // TODO: Fix the polymorphism
-                            if (MainActivity.this.user instanceof Student) {
-                                Toast.makeText(MainActivity.this, ((Student) MainActivity.this.user).getQueueInfo().toString(),
-                                        Toast.LENGTH_LONG).show();
-                                Log.i("Student Queue Info Query Succeed",
-                                        ((Student) user).getQueueInfo().toString());
-                                Log.i("User NetID", MainActivity.this.user.getNetId());
-                            }
                         } else {
                             Log.w("User Info Query Failed", task.getException());
                         }
@@ -178,6 +171,14 @@ public class MainActivity extends AppCompatActivity {
         userEmailView.setText(userEmailString);
         TextView userNameView = navigationView.getHeaderView(0).findViewById(R.id.userName);
         userNameView.setText(currentUser.getDisplayName());
+        // TODO: Fix the polymorphism
+        if (this.user instanceof Student) {
+            Toast.makeText(this, ((Student) user).getQueueInfo().toString(),
+                    Toast.LENGTH_LONG).show();
+            Log.i("Student Queue Info Query Succeed",
+                    ((Student) this.user).getQueueInfo().toString());
+            Log.i("User NetID", this.user.getNetId());
+        }
         if (!this.user.getRole().equals("Student")) {
             Button staffPortalButton = findViewById(R.id.staffPortal);
             staffPortalButton.setVisibility(View.VISIBLE);
