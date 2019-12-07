@@ -21,7 +21,7 @@
         </activity>
 
         <activity android:name=".ui.queue.QueueActivity"></activity>
-
+        <activity android:name=".ui.StaffPortal"></activity>
 
 
 

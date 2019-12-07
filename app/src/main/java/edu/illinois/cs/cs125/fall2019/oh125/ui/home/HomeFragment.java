@@ -23,8 +23,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import edu.illinois.cs.cs125.fall2019.oh125.Family125;
 import edu.illinois.cs.cs125.fall2019.oh125.R;
 import edu.illinois.cs.cs125.fall2019.oh125.Summary;
+import edu.illinois.cs.cs125.fall2019.oh125.ui.StaffPortal;
 import edu.illinois.cs.cs125.fall2019.oh125.ui.queue.QueueActivity;
-import edu.illinois.cs.cs125.fall2019.oh125.ui.queue.QueueFragment;
 
 public class HomeFragment extends Fragment {
 
@@ -92,6 +92,14 @@ public class HomeFragment extends Fragment {
             // If the user is not student, then set staffPortal page visible.
             Button staffPortalButton = view.findViewById(R.id.staffPortal);
             staffPortalButton.setVisibility(View.VISIBLE);
+            // Start StaffPortal activity when button is clicked
+            staffPortalButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getActivity(), StaffPortal.class);
+                    startActivity(intent);
+                }
+            });
             // Set queue request button invisible
             Button queue = getView().findViewById(R.id.queueRequestButton);
             queue.setVisibility(View.GONE);
