@@ -55,7 +55,7 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, final Bundle savedInstanceState) {
         if (mAuth.getCurrentUser() != null) {
             Toast.makeText(HomeFragment.this.getContext(), "Already Logged in",
                     Toast.LENGTH_SHORT).show();

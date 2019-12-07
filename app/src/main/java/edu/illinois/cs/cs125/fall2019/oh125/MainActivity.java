@@ -10,6 +10,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,6 +33,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -104,6 +108,17 @@ public class MainActivity extends AppCompatActivity {
         } else {
             loginPrompt();
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Load Google Calendar Page
+        WebView webCalendar = findViewById(R.id.webCalendar);
+        String webCalendarHtml = getResources().getString(R.string.calendar_url);
+        webCalendar.setWebViewClient(new WebViewClient());
+        webCalendar.getSettings().setJavaScriptEnabled(true);
+        webCalendar.loadUrl(webCalendarHtml);
     }
 
     @Override
