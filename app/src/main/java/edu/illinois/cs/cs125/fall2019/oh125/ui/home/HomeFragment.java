@@ -130,8 +130,8 @@ public class HomeFragment extends Fragment {
                             Log.w("Listen Error for Total TA Number", e);
                         } else {
                             int newCount = queryDocumentSnapshots.getDocuments().size();
-                            TextView caCount = getView().findViewById(R.id.taCount);
-                            caCount.setText(String.format(getResources().getString(R.string.ta_count),
+                            TextView ta_Count = getView().findViewById(R.id.taCount);
+                            ta_Count.setText(String.format(getResources().getString(R.string.ta_count),
                                     newCount));
                         }
                     }

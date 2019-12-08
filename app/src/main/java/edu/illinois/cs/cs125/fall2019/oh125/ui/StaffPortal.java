@@ -1,6 +1,7 @@
 package edu.illinois.cs.cs125.fall2019.oh125.ui;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -39,9 +40,12 @@ public class StaffPortal extends AppCompatActivity {
                     ca.getQueue().addOnSuccessListener(new OnSuccessListener<List<Student>>() {
                         @Override
                         public void onSuccess(List<Student> students) {
+                            Log.i("CA get queue", students.toString());
                             loadTasks(students);
                         }
                     });
+                } else {
+                    Log.i("CA get queue", "unsuccessful");
                 }
             }
         });
