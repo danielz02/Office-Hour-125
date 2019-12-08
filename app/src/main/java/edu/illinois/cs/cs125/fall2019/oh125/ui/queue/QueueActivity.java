@@ -3,10 +3,12 @@ package edu.illinois.cs.cs125.fall2019.oh125.ui.queue;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -40,6 +42,9 @@ public class QueueActivity extends AppCompatActivity {
                 RadioGroup getHelp = findViewById(R.id.getHelp);
 
                 // Get info that student put in to queue request form
+                if (table.getText().toString().isEmpty()) {
+                    // toast
+                }
                 final int tableNum = Integer.parseInt(table.getText().toString());
                 final int estimatedTime = Integer.parseInt(time.getText().toString());
 
@@ -56,9 +61,23 @@ public class QueueActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Family125> task) {
                         if (task.isSuccessful()) {
-                            Student student = (Student) task.getResult();
+                            final Student student = (Student) task.getResult();
                             try {
-                                student.enterQueue(category, estimatedTime, tableNum);
+                                student.enterQueue(category, estimatedTime, tableNum)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    Log.i("Entered Queue",
+                                                            student.getQueueInfo().toString());
+                                                } else {
+                                                    Log.w("Enter queue failed",
+                                                            task.getException());
+                                                }
+
+                                            }
+                                        });
+
                             } catch (IllegalArgumentException e) {
                                 // Illegal Arg
                                 dialogBox(e.getMessage());
@@ -88,17 +107,9 @@ public class QueueActivity extends AppCompatActivity {
      * @param message from calling enterQueue
      */
     public void dialogBox(String message) {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setMessage(message);
         alertDialogBuilder.setPositiveButton("Ok",
-                new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1) {
-                    }
-                });
-
-        alertDialogBuilder.setNegativeButton("cancel",
                 new DialogInterface.OnClickListener() {
 
                     @Override
@@ -109,7 +120,18 @@ public class QueueActivity extends AppCompatActivity {
                     }
                 });
 
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
+//        alertDialogBuilder.setNegativeButton("cancel",
+//                new DialogInterface.OnClickListener() {
+//
+//                    @Override
+//                    public void onClick(DialogInterface arg0, int arg1) {
+//
+//                    }
+//
+//                });
+
+         AlertDialog alertDialog = alertDialogBuilder.create();
+         alertDialog.show();
+
     }
 }

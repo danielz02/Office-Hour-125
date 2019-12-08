@@ -170,7 +170,7 @@ public class Family125 implements OfficeHourStatus {
                         Log.i("Student instance initialized", toReturn.toString());
                         return toReturn;
                     default:
-                        return null;
+                        return task.getResult().toObject(Family125.class);
                 }
             }
         });

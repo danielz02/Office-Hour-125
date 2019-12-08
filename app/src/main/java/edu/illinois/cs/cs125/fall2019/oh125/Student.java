@@ -73,7 +73,10 @@ public class Student extends Family125 implements SendQueue {
             // I'm too lazy to create a customized exception.
             // Please display a alert dialogue to let the user to decide whether to exit queue and
             // make a new request.
+        } else if (category == null) {
+            throw new IllegalArgumentException("Please Choose MP or HW");
         }
+
         Timestamp timeEntered = new Timestamp(new Date(Long.parseLong(FieldValue.serverTimestamp().toString())));
         this.queueInfo = new QueueInfo(category, estimatedTime, table, timeEntered);
         Log.i("Queue Info Created", queueInfo.toString());

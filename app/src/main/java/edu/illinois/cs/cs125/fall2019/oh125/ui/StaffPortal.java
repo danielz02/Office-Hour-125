@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -35,10 +36,12 @@ public class StaffPortal extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     CA ca = (CA) task.getResult();
                     // Get list of students in Queue
-                    List<Student> students = ca.getQueue().getResult();
-                    if (Summary.getInstance().getQueue().isComplete()) {
-                        loadTasks(students);
-                    }
+                    ca.getQueue().addOnSuccessListener(new OnSuccessListener<List<Student>>() {
+                        @Override
+                        public void onSuccess(List<Student> students) {
+                            loadTasks(students);
+                        }
+                    });
                 }
             }
         });
