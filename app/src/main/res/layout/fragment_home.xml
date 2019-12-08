@@ -132,6 +132,11 @@
             android:text="@string/staff_portal"
             android:visibility="gone"/>
 
+        <WebView
+            android:id="@+id/webCalendar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
         <TextView
             android:id="@+id/text_home"
             android:layout_width="match_parent"

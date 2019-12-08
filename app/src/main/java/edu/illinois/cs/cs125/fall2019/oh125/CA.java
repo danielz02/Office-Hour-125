@@ -9,6 +9,7 @@ import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -16,6 +17,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class CA extends Family125 implements ManageQueue {
     /**
@@ -72,12 +74,28 @@ public class CA extends Family125 implements ManageQueue {
                     public List<Student> then(@NonNull Task<List<Student>> task) {
                         for (Student studentInQueue: task.getResult()) {
                             studentInQueue.initializeQueueInfo()
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    .addOnSuccessListener(new OnSuccessListener<Student>() {
                                         @Override
-                                        public void onSuccess(Void aVoid) { }
-                                    });
+                                        public void onSuccess(Student student) {
+
+                                        }
+                                    }).continueWith(new Continuation<Student, Student>() {
+                                        @Override
+                                        public Student then(@NonNull Task<Student> task) {
+                                            return task.getResult();
+                                        }
+                            });
+
                         }
-                        Log.i("getQueue Succeed", task.getResult().toString());
+                        try {
+                            Tasks.await(task);
+                        } catch (InterruptedException e) {
+                            Log.w("getQueue Failed 1", e);
+                        } catch (ExecutionException e) {
+                            Log.w("getQueue Failed 2", e);
+                        } finally {
+                            Log.i("getQueue Succeed", task.getResult().get(0).getQueueInfo().toString());
+                        }
                         return task.getResult();
                     }
         });

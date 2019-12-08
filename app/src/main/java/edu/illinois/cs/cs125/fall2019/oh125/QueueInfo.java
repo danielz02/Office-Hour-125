@@ -26,7 +26,9 @@ public class QueueInfo {
     private Timestamp timeEntered;
 
     /** The dummy constructor for Firebase Firestore. */
-    public QueueInfo() { }
+    public QueueInfo() {
+        Log.i("QueueInfo Object instantiated", "dummy constructor is called!");
+    }
 
     /**
      * The constructor for the inner class.

@@ -170,9 +170,33 @@ public class Family125 implements OfficeHourStatus {
                         Log.i("Student instance initialized", toReturn.toString());
                         return toReturn;
                     default:
-                        return null;
+                        return task.getResult().toObject(Family125.class);
                 }
             }
         });
+        /**
+        .continueWith(new Continuation<Family125, Family125>() {
+            @Override
+            public Family125 then(@NonNull Task<Family125> task) {
+                if (task.getResult() instanceof Student) {
+                    ((Student) task.getResult()).initializeQueueInfo()
+                            .addOnCompleteListener(new OnCompleteListener<Student>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Student> task) {
+                                    Log.i("Student QueueInfo Initialized",
+                                            task.getResult().getQueueInfo().toString());
+                                }
+                            }).continueWith(new Continuation<Student, Student>() {
+                                @Override
+                                public Student then(@NonNull Task<Student> task) {
+                                    return task.getResult();
+                                }
+                            });
+                } else {
+                    return task.getResult();
+                }
+            }
+        });
+         */
     }
 }

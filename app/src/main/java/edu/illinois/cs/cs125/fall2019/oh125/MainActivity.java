@@ -6,10 +6,12 @@ import android.os.Bundle;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,6 +34,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -107,6 +112,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        // Load Google Calendar Page
+        WebView webCalendar = findViewById(R.id.webCalendar);
+        String webCalendarHtml = getResources().getString(R.string.calendar_url);
+        webCalendar.setWebViewClient(new WebViewClient());
+        webCalendar.getSettings().setJavaScriptEnabled(true);
+        webCalendar.loadUrl(webCalendarHtml);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
@@ -174,9 +190,9 @@ public class MainActivity extends AppCompatActivity {
         if (this.user instanceof Student) {
             final Student userAsStudent = (Student) this.user;
             userAsStudent.initializeQueueInfo()
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    .addOnCompleteListener(new OnCompleteListener<Student>() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
+                    public void onComplete(@NonNull Task<Student> task) {
                         if (task.isSuccessful()) {
                             try {
                                 Log.i("Initialization Succeed",

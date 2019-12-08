@@ -184,7 +184,7 @@ public class Student extends Family125 implements SendQueue {
         return "Student Name: " + this.getName() + "; Student NetID: " + this.getNetId();
     }
 
-    Task<Void> initializeQueueInfo() {
+    Task<Student> initializeQueueInfo() {
         return QueueInfo.getInstance(this.getEmail()).addOnCompleteListener(new OnCompleteListener<QueueInfo>() {
             @Override
             public void onComplete(@NonNull Task<QueueInfo> task) {
@@ -194,10 +194,10 @@ public class Student extends Family125 implements SendQueue {
                     Log.w("Queue Info Initialization Failed", task.getException());
                 }
             }
-        }).continueWith(new Continuation<QueueInfo, Void>() {
+        }).continueWith(new Continuation<QueueInfo, Student>() {
             @Override
-            public Void then(@NonNull Task<QueueInfo> task) throws Exception {
-                return null;
+            public Student then(@NonNull Task<QueueInfo> task) throws Exception {
+                return Student.this;
             }
         });
     }

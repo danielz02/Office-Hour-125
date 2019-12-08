@@ -25,6 +25,7 @@
     <string name="total_staff">Total CA/TA Number: </string>
     <string name="ca_count">CA: %1$d</string>
     <string name="ta_count">TA: %1$d</string>
+    <string name="calendar_url">https://bit.ly/350L3nD</string>
 
     <string name="logout">Logout</string>
     <string name="cancel">Cancel</string>
