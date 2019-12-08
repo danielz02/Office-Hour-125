@@ -73,7 +73,7 @@ public class Student extends Family125 implements SendQueue {
             // I'm too lazy to create a customized exception.
             // Please display a alert dialogue to let the user to decide whether to exit queue and
             // make a new request.
-        } else if (category == null) {
+        } else if (category.equals("")) {
             throw new IllegalArgumentException("Please Choose MP or HW");
         }
 

@@ -74,8 +74,10 @@ public class QueueActivity extends AppCompatActivity {
                     final String category;
                     if (getHelp.getCheckedRadioButtonId() == R.id.mp) {
                         category = "MP";
-                    } else {
+                    } else if (getHelp.getCheckedRadioButtonId() == R.id.hw) {
                         category = "HW";
+                    } else {
+                        category = "";
                     }
 
                     // add info to queue
@@ -93,17 +95,39 @@ public class QueueActivity extends AppCompatActivity {
                                                     if (task.isSuccessful()) {
                                                         Log.i("Entered Queue",
                                                                 student.getQueueInfo().toString());
+                                                        // Successfully entered queue
+                                                        // Create a toast
+                                                        Toast toast = Toast.makeText(QueueActivity.this,
+                                                                "Congrats! You've entered the queue!",
+                                                                Toast.LENGTH_LONG);
+                                                        toast.setGravity(Gravity.CENTER_VERTICAL|
+                                                                Gravity.CENTER_HORIZONTAL, 0, 0);
+                                                        toast.show();
+//                                                        Intent intent = new Intent(QueueActivity.this,
+//                                                                MainActivity.class);
+//                                                        startActivity(intent);
+//                                                        finish();
                                                     } else {
                                                         Log.w("Enter queue failed",
                                                                 task.getException());
+                                                        Toast toast = Toast.makeText(QueueActivity.this,
+                                                                "You failed to enter queue!",
+                                                                Toast.LENGTH_LONG);
+                                                        toast.setGravity(Gravity.CENTER_VERTICAL|
+                                                                Gravity.CENTER_HORIZONTAL, 0, 0);
+                                                        toast.show();
                                                     }
-
                                                 }
                                             });
-
                                 } catch (Exception e) {
                                     // Illegal Arg or File Already Exist
-                                    dialogBox(e.getMessage());
+                                    // Create a toast
+                                    Toast toast = Toast.makeText(QueueActivity.this,
+                                            e.getMessage(),
+                                            Toast.LENGTH_LONG);
+                                    toast.setGravity(Gravity.CENTER_VERTICAL|
+                                            Gravity.CENTER_HORIZONTAL, 0, 0);
+                                    toast.show();
                                 }
                             }
                         }
