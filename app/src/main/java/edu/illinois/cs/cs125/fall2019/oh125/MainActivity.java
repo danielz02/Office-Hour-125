@@ -112,17 +112,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        // Load Google Calendar Page
-        WebView webCalendar = findViewById(R.id.webCalendar);
-        String webCalendarHtml = getResources().getString(R.string.calendar_url);
-        webCalendar.setWebViewClient(new WebViewClient());
-        webCalendar.getSettings().setJavaScriptEnabled(true);
-        webCalendar.loadUrl(webCalendarHtml);
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
