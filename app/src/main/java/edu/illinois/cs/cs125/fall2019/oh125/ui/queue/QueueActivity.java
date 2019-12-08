@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,52 +43,73 @@ public class QueueActivity extends AppCompatActivity {
                 RadioGroup getHelp = findViewById(R.id.getHelp);
 
                 // Get info that student put in to queue request form
-                if (table.getText().toString().isEmpty()) {
-                    // toast
-                }
-                final int tableNum = Integer.parseInt(table.getText().toString());
-                final int estimatedTime = Integer.parseInt(time.getText().toString());
-
-                final String category;
-                if (getHelp.getCheckedRadioButtonId() == R.id.mp) {
-                    category = "MP";
+                if (table.getText().toString().isEmpty() && time.getText().toString().isEmpty()) {
+                    // Displaying toast message if no time or table is put in
+                    Toast toast = Toast.makeText(QueueActivity.this,
+                            "Please put in your estimated time and table number",
+                            Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.CENTER_VERTICAL|
+                            Gravity.CENTER_HORIZONTAL, 0, 0);
+                    toast.show();
+                } else if (table.getText().toString().isEmpty()) {
+                    // Displaying toast message if no table number is put in
+                    Toast toast= Toast.makeText(QueueActivity.this,
+                            "Please put in your table number",
+                            Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.CENTER_VERTICAL|
+                                    Gravity.CENTER_HORIZONTAL, 0, 0);
+                    toast.show();
+                } else if (time.getText().toString().isEmpty()) {
+                    // Displaying toast message if no time is put in
+                    Toast toast = Toast.makeText(QueueActivity.this,
+                            "Please put in the estimated time",
+                            Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.CENTER_VERTICAL|
+                            Gravity.CENTER_HORIZONTAL, 0, 0);
+                    toast.show();
                 } else {
-                    category = "HW";
-                }
+                    // Get info that student put in to queue request form
+                    final int tableNum = Integer.parseInt(table.getText().toString());
+                    final int estimatedTime = Integer.parseInt(time.getText().toString());
 
-                // add info to queue
-                String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-                Student.getInstance(email).addOnCompleteListener(new OnCompleteListener<Family125>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Family125> task) {
-                        if (task.isSuccessful()) {
-                            final Student student = (Student) task.getResult();
-                            try {
-                                student.enterQueue(category, estimatedTime, tableNum)
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()) {
-                                                    Log.i("Entered Queue",
-                                                            student.getQueueInfo().toString());
-                                                } else {
-                                                    Log.w("Enter queue failed",
-                                                            task.getException());
+                    final String category;
+                    if (getHelp.getCheckedRadioButtonId() == R.id.mp) {
+                        category = "MP";
+                    } else {
+                        category = "HW";
+                    }
+
+                    // add info to queue
+                    String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+                    Student.getInstance(email).addOnCompleteListener(new OnCompleteListener<Family125>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Family125> task) {
+                            if (task.isSuccessful()) {
+                                final Student student = (Student) task.getResult();
+                                try {
+                                    student.enterQueue(category, estimatedTime, tableNum)
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        Log.i("Entered Queue",
+                                                                student.getQueueInfo().toString());
+                                                    } else {
+                                                        Log.w("Enter queue failed",
+                                                                task.getException());
+                                                    }
+
                                                 }
+                                            });
 
-                                            }
-                                        });
-
-                            } catch (IllegalArgumentException e) {
-                                // Illegal Arg
-                                dialogBox(e.getMessage());
-                            } catch (FileAlreadyExistsException e) {
-                                // Already in queue
-                                dialogBox(e.getMessage());
+                                } catch (Exception e) {
+                                    // Illegal Arg or File Already Exist
+                                    dialogBox(e.getMessage());
+                                }
                             }
                         }
-                    }
-                });
+                    });
+                }
             }
         });
 
