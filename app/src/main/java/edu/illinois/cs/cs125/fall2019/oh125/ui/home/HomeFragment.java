@@ -28,7 +28,6 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import edu.illinois.cs.cs125.fall2019.oh125.Family125;
-import edu.illinois.cs.cs125.fall2019.oh125.MainActivity;
 import edu.illinois.cs.cs125.fall2019.oh125.R;
 import edu.illinois.cs.cs125.fall2019.oh125.Student;
 import edu.illinois.cs.cs125.fall2019.oh125.Summary;
@@ -45,13 +44,6 @@ public class HomeFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
-        final TextView textView = root.findViewById(R.id.text_home);
-        homeViewModel.getText().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
         // Initialize instance variable
         mAuth = FirebaseAuth.getInstance();
 
