@@ -128,7 +128,7 @@ public class Student extends Family125 implements SendQueue {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
-                                    Log.i("Exited Queue", task.getResult().toString());
+                                    // Log.i("Exited Queue", task.getResult().toString());
                                 } else {
                                     Log.w("Exit Failed", task.getException());
                                 }
@@ -152,7 +152,7 @@ public class Student extends Family125 implements SendQueue {
      * Setter for isInQueue.
      * @param inQueue The new queue status.
      */
-    void setIsInQueue(final boolean inQueue) {
+    public void setIsInQueue(final boolean inQueue) {
         this.isInQueue = inQueue;
     }
 

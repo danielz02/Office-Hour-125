@@ -98,6 +98,11 @@ public class QueueActivity extends AppCompatActivity {
                                                         Log.i("Entered Queue",
                                                                 student.getQueueInfo().toString());
                                                         // Successfully entered queue
+                                                        // Set the button exit Queue in Home Fragment Visible
+                                                        final Button queue = findViewById(R.id.queueRequestButton);
+                                                        final Button exitQueue = findViewById(R.id.exitQueue);
+                                                        exitQueue.setVisibility(View.VISIBLE);
+                                                        queue.setVisibility(View.GONE);
                                                         // Create a toast
                                                         Toast toast = Toast.makeText(QueueActivity.this,
                                                                 "Congrats! You've entered the queue!",
