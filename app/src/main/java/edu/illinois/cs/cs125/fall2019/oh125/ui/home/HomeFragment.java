@@ -166,28 +166,48 @@ public class HomeFragment extends Fragment {
             });
         }
 
-        // Button "I'm at Office Hour"
-        Button here = getView().findViewById(R.id.here);
-        // Update number of student/CA/TA at office hour when clicked
+        // Button "I'm at Office Hour" and "Leave Office Hour"
+        final Button here = getView().findViewById(R.id.here);
+        final Button leave = getView().findViewById(R.id.leave);
+
+        // Initial State of the two buttons based on whether they are at office hour or not
+        if (user.getIsAtOfficeHour()) {
+            here.setVisibility(View.GONE);
+            leave.setVisibility(View.VISIBLE);
+        }
+
+        // Increase number of student/CA/TA at office hour when clicked
         here.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-                Family125.getInstance(email).addOnCompleteListener(new OnCompleteListener<Family125>() {
+                user.setIsAtOfficeHour(true);
+                user.updateOfficeHourStatus().addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
-                    public void onComplete(@NonNull Task<Family125> task) {
+                    public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            // Set 'isAtOfficeHour' to true
-                            final Family125 member =  task.getResult();
-                            member.setIsAtOfficeHour(true);
-                            member.updateOfficeHourStatus().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        Log.i("At Office Hour Button", member.getName() + " Entered Office Hour");
-                                    }
-                                }
-                            });
+                            Log.i("At Office Hour Button", user.getName() + " Entered Office Hour");
+                            // Make "at OH" button invisible and "leave OH" button visible
+                            here.setVisibility(View.GONE);
+                            leave.setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
+            }
+        });
+
+        // Decrease number of student/CA/TA at office hour when clicked
+        leave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                user.setIsAtOfficeHour(false);
+                user.updateOfficeHourStatus().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.i("At Office Hour Button", user.getName() + " Left Office Hour");
+                            // Make "at OH" button visible and "leave OH" button invisible
+                            here.setVisibility(View.VISIBLE);
+                            leave.setVisibility(View.GONE);
                         }
                     }
                 });
