@@ -21,9 +21,16 @@
         <RadioButton
             android:id="@+id/hw"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="0.5"
             android:text="HW" />
+
+        <RadioButton
+            android:id="@+id/other"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:text="Other" />
 
     </RadioGroup>
 
@@ -39,16 +46,16 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:ems="10"
-            android:hint="Estimated Time (min)"
+            android:hint="Estimated Time (0-10 min)"
             android:inputType="time" />
 
         <EditText
             android:id="@+id/table"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="1.5"
             android:ems="10"
-            android:hint="Your Table Number"
+            android:hint="Table #(0-5)"
             android:inputType="number" />
     </LinearLayout>
 

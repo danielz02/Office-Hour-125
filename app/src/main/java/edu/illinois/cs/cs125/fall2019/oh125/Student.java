@@ -51,11 +51,11 @@ public class Student extends Family125 implements SendQueue {
 
     /**
      * Add current Student instance's QueueItem instance as an entry to the queue database in Firestore.
-     * @param category      The category of students' question, either being MP or Homework
+     * @param category      The category of students' question, either being MP or Homework or Other
      * @param estimatedTime The estimated time of the current session, in minutes
      * @param table         The number of student's current table
      * @return An Android task of Void type
-     * @throws IllegalArgumentException when category is not either MP or Homework
+     * @throws IllegalArgumentException when category is not either MP or Homework or Other
      */
     @Override
     public Task<Void> enterQueue(String category,
@@ -73,7 +73,10 @@ public class Student extends Family125 implements SendQueue {
             // I'm too lazy to create a customized exception.
             // Please display a alert dialogue to let the user to decide whether to exit queue and
             // make a new request.
+        } else if (category.equals("")) {
+            throw new IllegalArgumentException("Please Choose MP or HW or Other");
         }
+
         Timestamp timeEntered = new Timestamp(new Date(Long.parseLong(FieldValue.serverTimestamp().toString())));
         this.queueInfo = new QueueInfo(category, estimatedTime, table, timeEntered);
         Log.i("Queue Info Created", queueInfo.toString());
@@ -113,17 +116,14 @@ public class Student extends Family125 implements SendQueue {
      * @return An Android task of type Void
      */
     @Override
-    public Task<Void> exitQueue() throws FileNotFoundException {
-        if (this.queueInfo == null) {
-            throw new FileNotFoundException("User is not in queue! No need to exit!");
-        }
+    public Task<Void> exitQueue() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         this.setIsInQueue(false);
         return db.collection("queue")
                 .document(this.getNetId())
                 .delete().continueWith(new Continuation<Void, Void>() {
                     @Override
-                    public Void then(@NonNull Task<Void> task) throws Exception {
+                    public Void then(@NonNull Task<Void> task) {
                         updateQueueStatus().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {

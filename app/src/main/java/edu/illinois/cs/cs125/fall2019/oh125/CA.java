@@ -108,12 +108,7 @@ public class CA extends Family125 implements ManageQueue {
      */
     @Override @Nullable
     public Task<Void> endQueue(Student student) {
-        try {
-            return student.exitQueue();
-        } catch (FileNotFoundException e) {
-            Log.w("endQueue Failed", e);
-        }
-        return null;
+        return student.exitQueue();
     }
 
     @Override @NonNull
