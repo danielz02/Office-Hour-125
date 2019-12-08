@@ -82,25 +82,25 @@ public class Student extends Family125 implements SendQueue {
         Log.i("Queue Info Created", queueInfo.toString());
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         this.setIsInQueue(true);
-        return db.collection("queue")
-                .add(queueInfo)
-                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+        return db.collection("queue").document(this.getNetId())
+                .set(queueInfo)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
-                    public void onComplete(@NonNull Task<DocumentReference> task) {
+                    public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Log.i("Enter Queue Succeed", task.getResult().toString());
+                            Log.i("Enter Queue Succeed", Student.this.getQueueInfo().toString());
                         } else {
                             Log.w("Enter Queue Failed", task.getException());
                         }
                     }
-                }).continueWith(new Continuation<DocumentReference, Void>() {
+                }).continueWith(new Continuation<Void, Void>() {
                     @Override
-                    public Void then(@NonNull Task<DocumentReference> task) {
+                    public Void then(@NonNull Task<Void> task) {
                         updateQueueStatus().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
-                                    Log.i("Queue Status Updated", task.getResult().toString());
+                                    Log.i("Queue Status Updated", "Yeah!");
                                 } else {
                                     Log.w("Queue Status Update Failed", task.getException());
                                 }
