@@ -113,6 +113,13 @@
             android:text="@string/here" />
 
         <Button
+            android:id="@+id/leave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Leave Office Hour"
+            android:visibility="gone" />
+
+        <Button
             android:id="@+id/queueRequestButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

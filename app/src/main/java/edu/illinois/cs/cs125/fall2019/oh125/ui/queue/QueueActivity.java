@@ -148,37 +148,4 @@ public class QueueActivity extends AppCompatActivity {
             }
         });
     }
-
-    /**
-     * Pop up an alert dialog
-     * @param message from calling enterQueue
-     */
-    public void dialogBox(String message) {
-        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setMessage(message);
-        alertDialogBuilder.setPositiveButton("Ok",
-                new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        Intent intent = new Intent(QueueActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
-                });
-
-//        alertDialogBuilder.setNegativeButton("cancel",
-//                new DialogInterface.OnClickListener() {
-//
-//                    @Override
-//                    public void onClick(DialogInterface arg0, int arg1) {
-//
-//                    }
-//
-//                });
-
-         AlertDialog alertDialog = alertDialogBuilder.create();
-         alertDialog.show();
-
-    }
 }
