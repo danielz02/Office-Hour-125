@@ -103,50 +103,6 @@ public class HomeFragment extends Fragment {
         webCalendar.loadUrl(webCalendarHtml);
     }
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        FirebaseFirestore db =FirebaseFirestore.getInstance();
-        // Listener for any change in the total number of CAs at Office Hour
-        db.collection("user")
-                .whereEqualTo("role", "CA")
-                .whereEqualTo("isAtOfficeHour", true)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots,
-                                        @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.w("Listen Error for Total CA Number", e);
-                        } else {
-                            int newCount = queryDocumentSnapshots.getDocuments().size();
-                            TextView caCount = getView().findViewById(R.id.caCount);
-                            caCount.setText(String.format(getResources().getString(R.string.ca_count),
-                                    newCount));
-                        }
-                    }
-                });
-
-        // Listener for any change in the total number of TAs at Office Hour
-        db.collection("user")
-                .whereEqualTo("role", "TA")
-                .whereEqualTo("isAtOfficeHour", true)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots,
-                                        @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.w("Listen Error for Total TA Number", e);
-                        } else {
-                            int newCount = queryDocumentSnapshots.getDocuments().size();
-                            TextView caCount = getView().findViewById(R.id.taCount);
-                            caCount.setText(String.format(getResources().getString(R.string.ta_count),
-                                    newCount));
-                        }
-                    }
-                });
-
-    }
-
 
     /**
      * Perform all the UI setup after user login
@@ -299,30 +255,12 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        // Listener for any change in the total number of student at Office Hour
-        db.collection("user")
-                .whereEqualTo("role", "Student")
-                .whereEqualTo("isAtOfficeHour", true)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots,
-                                        @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.w("Listen Error for Total Student Number", e);
-                        } else {
-                            int newCount = queryDocumentSnapshots.getDocuments().size();
-                            TextView studentCount = getView().findViewById(R.id.studentCount);
-                            studentCount.setText(String.valueOf(newCount));
-                        }
-                    }
-                });
-
         // Display number of CA at Office Hour
         Summary.getInstance().getTotalCA().addOnCompleteListener(new OnCompleteListener<Integer>() {
             @Override
             public void onComplete(@NonNull Task<Integer> task) {
                 if (task.isSuccessful()) {
-                    TextView caCount = getView().findViewById(R.id.caCount);
+                    TextView caCount = view.findViewById(R.id.caCount);
                     caCount.setText(String.format(getResources().getString(R.string.ca_count),
                             task.getResult()));
                 } else {
@@ -336,7 +274,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<Integer> task) {
                 if (task.isSuccessful()) {
-                    TextView taCount = getView().findViewById(R.id.taCount);
+                    TextView taCount = view.findViewById(R.id.taCount);
                     taCount.setText(String.format(getResources().getString(R.string.ta_count),
                             task.getResult()));
                 } else {
@@ -344,6 +282,7 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
-
     }
+
+
 }

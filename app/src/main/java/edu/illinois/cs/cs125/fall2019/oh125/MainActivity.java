@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -27,6 +28,10 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -38,6 +43,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -176,6 +182,10 @@ public class MainActivity extends AppCompatActivity {
         userEmailView.setText(userEmailString);
         TextView userNameView = navigationView.getHeaderView(0).findViewById(R.id.userName);
         userNameView.setText(currentUser.getDisplayName());
+        ImageView avatar = findViewById(R.id.gravatar);
+        Glide.with(this)
+                .load("https://www.gravatar.com/avatar/" + MD5Util.md5Hex(userEmailString) + "?s=256")
+                .into(avatar);
         if (this.user instanceof Student) {
             final Student userAsStudent = (Student) this.user;
             userAsStudent.initializeQueueInfo()
@@ -206,6 +216,7 @@ public class MainActivity extends AppCompatActivity {
             Button staffPortalButton = findViewById(R.id.staffPortal);
             staffPortalButton.setVisibility(View.VISIBLE);
         }
+        addChangeListener();
     }
 
     /**
@@ -251,6 +262,70 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
         builder.show();
+    }
+
+    /**
+     * A method to register for all change listener of data summary
+     */
+    private void addChangeListener() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        // Listener for any change in the total number of student at Office Hour
+        db.collection("user")
+                .whereEqualTo("role", "Student")
+                .whereEqualTo("isAtOfficeHour", true)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots,
+                                        @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w("Listen Error for Total Student Number", e);
+                        } else {
+                            int newCount = queryDocumentSnapshots.getDocuments().size();
+                            TextView studentCount = findViewById(R.id.studentCount);
+                            studentCount.setText(String.valueOf(newCount));
+                        }
+                    }
+                });
+
+        // Listener for any change in the total number of TAs at Office Hour
+        db.collection("user")
+                .whereEqualTo("role", "TA")
+                .whereEqualTo("isAtOfficeHour", true)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots,
+                                        @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w("Listen Error for Total TA Number", e);
+                        } else {
+                            int newCount = queryDocumentSnapshots.getDocuments().size();
+                            TextView caCount = findViewById(R.id.taCount);
+                            caCount.setText(String.format(getResources().getString(R.string.ta_count),
+                                    newCount));
+                        }
+                    }
+                });
+
+        // Listener for any change in the total number of CAs at Office Hour
+        db.collection("user")
+                .whereEqualTo("role", "CA")
+                .whereEqualTo("isAtOfficeHour", true)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots,
+                                        @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w("Listen Error for Total CA Number", e);
+                        } else {
+                            int newCount = queryDocumentSnapshots.getDocuments().size();
+                            TextView caCount = findViewById(R.id.caCount);
+                            caCount.setText(String.format(getResources().getString(R.string.ca_count),
+                                    newCount));
+                        }
+                    }
+                });
+
     }
 
 }
