@@ -152,7 +152,7 @@ public class Student extends Family125 implements SendQueue {
      * Setter for isInQueue.
      * @param inQueue The new queue status.
      */
-    void setIsInQueue(final boolean inQueue) {
+    public void setIsInQueue(final boolean inQueue) {
         this.isInQueue = inQueue;
     }
 

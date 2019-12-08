@@ -28,6 +28,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import edu.illinois.cs.cs125.fall2019.oh125.Family125;
+import edu.illinois.cs.cs125.fall2019.oh125.MainActivity;
 import edu.illinois.cs.cs125.fall2019.oh125.R;
 import edu.illinois.cs.cs125.fall2019.oh125.Student;
 import edu.illinois.cs.cs125.fall2019.oh125.Summary;
@@ -182,43 +183,52 @@ public class HomeFragment extends Fragment {
                 public void onComplete(@NonNull Task<Family125> task) {
                     if (task.isSuccessful()) {
                         final Student student = (Student) task.getResult();
+
+                        // Initial State of exit queue and queue request button depend on boolean isInQueue
                         if (student.getIsInQueue()) {
                             exitQueue.setVisibility(View.VISIBLE);
                             queue.setVisibility(View.GONE);
-                            exitQueue.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(final View view) {
-                                    student.exitQueue()
-                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    if (task.isSuccessful()) {
-//                                                        Log.i("Exited Queue",
-//                                                                student.getQueueInfo().toString());
-                                                        setUpUi(view);
-                                                    } else {
-                                                        Log.w("Exit queue failed",
-                                                                task.getException());
-                                                        Toast.makeText(getContext(),
-                                                                "Exit queue failed",
-                                                                Toast.LENGTH_LONG).show();
-                                                    }
-
-                                                }
-                                            });
-                                }
-                            });
                         } else {
                             // If student is not in queue
-                            // When student press queue request button, start queue request activity
-                            queue.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    Intent intent = new Intent(getActivity(), QueueActivity.class);
-                                    startActivity(intent);
-                                }
-                            });
+                            exitQueue.setVisibility(View.GONE);
+                            queue.setVisibility(View.VISIBLE);
                         }
+
+                        // Clicked to exit Queue if was originally in queue
+                        exitQueue.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(final View view) {
+                                // Student exited queue, isInQueue set to false
+                                student.exitQueue()
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {                                                        
+                                                    Log.i("Exited Queue", student.toString() + " exited");
+
+                                                    exitQueue.setVisibility(View.GONE);
+                                                    queue.setVisibility(View.VISIBLE);
+                                                } else {
+                                                    Log.w("Exit queue failed",
+                                                            task.getException());
+                                                    Toast.makeText(getContext(),
+                                                            "Exit queue failed",
+                                                            Toast.LENGTH_LONG).show();
+                                                }
+
+                                            }
+                                        });
+                            }
+                        });
+
+                        // When student press queue request button, start queue request activity
+                        queue.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent intent = new Intent(getActivity(), QueueActivity.class);
+                                startActivity(intent);
+                            }
+                        });
                     }
                 }
             });
@@ -277,7 +287,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<Integer> task) {
                 if (task.isSuccessful()) {
-                    TextView studentCount = view.findViewById(R.id.studentCount);
+                    TextView studentCount = getView().findViewById(R.id.studentCount);
                     studentCount.setText(String.valueOf(task.getResult()));
                 } else {
                     Log.w("Total Student Display Failed", task.getException());
@@ -297,7 +307,7 @@ public class HomeFragment extends Fragment {
                             Log.w("Listen Error for Total Student Number", e);
                         } else {
                             int newCount = queryDocumentSnapshots.getDocuments().size();
-                            TextView studentCount = view.findViewById(R.id.studentCount);
+                            TextView studentCount = getView().findViewById(R.id.studentCount);
                             studentCount.setText(String.valueOf(newCount));
                         }
                     }
@@ -308,7 +318,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<Integer> task) {
                 if (task.isSuccessful()) {
-                    TextView caCount = view.findViewById(R.id.caCount);
+                    TextView caCount = getView().findViewById(R.id.caCount);
                     caCount.setText(String.format(getResources().getString(R.string.ca_count),
                             task.getResult()));
                 } else {
@@ -317,14 +327,12 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
-
         // Display number of TA at Office Hour
         Summary.getInstance().getTotalTA().addOnCompleteListener(new OnCompleteListener<Integer>() {
             @Override
             public void onComplete(@NonNull Task<Integer> task) {
                 if (task.isSuccessful()) {
-                    TextView taCount = view.findViewById(R.id.taCount);
+                    TextView taCount = getView().findViewById(R.id.taCount);
                     taCount.setText(String.format(getResources().getString(R.string.ta_count),
                             task.getResult()));
                 } else {
