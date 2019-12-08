@@ -19,7 +19,6 @@ import androidx.lifecycle.ViewModelProviders;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -166,6 +165,34 @@ public class HomeFragment extends Fragment {
                 }
             });
         }
+
+        // Button "I'm at Office Hour"
+        Button here = getView().findViewById(R.id.here);
+        // Update number of student/CA/TA at office hour when clicked
+        here.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+                Family125.getInstance(email).addOnCompleteListener(new OnCompleteListener<Family125>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Family125> task) {
+                        if (task.isSuccessful()) {
+                            // Set 'isAtOfficeHour' to true
+                            final Family125 member =  task.getResult();
+                            member.setIsAtOfficeHour(true);
+                            member.updateOfficeHourStatus().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Log.i("At Office Hour Button", member.getName() + " Entered Office Hour");
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+        });
 
         // Display number of students at Office Hour
         Summary.getInstance().getTotalStudent().addOnCompleteListener(new OnCompleteListener<Integer>() {
