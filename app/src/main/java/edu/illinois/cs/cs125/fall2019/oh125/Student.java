@@ -51,11 +51,11 @@ public class Student extends Family125 implements SendQueue {
 
     /**
      * Add current Student instance's QueueItem instance as an entry to the queue database in Firestore.
-     * @param category      The category of students' question, either being MP or Homework
+     * @param category      The category of students' question, either being MP or Homework or Other
      * @param estimatedTime The estimated time of the current session, in minutes
      * @param table         The number of student's current table
      * @return An Android task of Void type
-     * @throws IllegalArgumentException when category is not either MP or Homework
+     * @throws IllegalArgumentException when category is not either MP or Homework or Other
      */
     @Override
     public Task<Void> enterQueue(String category,
@@ -74,7 +74,7 @@ public class Student extends Family125 implements SendQueue {
             // Please display a alert dialogue to let the user to decide whether to exit queue and
             // make a new request.
         } else if (category.equals("")) {
-            throw new IllegalArgumentException("Please Choose MP or HW");
+            throw new IllegalArgumentException("Please Choose MP or HW or Other");
         }
 
         Timestamp timeEntered = new Timestamp(new Date(Long.parseLong(FieldValue.serverTimestamp().toString())));

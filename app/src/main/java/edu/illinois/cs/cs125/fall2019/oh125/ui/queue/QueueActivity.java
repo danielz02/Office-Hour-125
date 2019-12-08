@@ -76,6 +76,8 @@ public class QueueActivity extends AppCompatActivity {
                         category = "MP";
                     } else if (getHelp.getCheckedRadioButtonId() == R.id.hw) {
                         category = "HW";
+                    } else if (getHelp.getCheckedRadioButtonId() == R.id.other) {
+                        category = "Other";
                     } else {
                         category = "";
                     }
