@@ -77,7 +77,7 @@ public class Student extends Family125 implements SendQueue {
             throw new IllegalArgumentException("Please Choose MP or HW or Other");
         }
 
-        Timestamp timeEntered = new Timestamp(new Date(Long.parseLong(FieldValue.serverTimestamp().toString())));
+        Timestamp timeEntered = Timestamp.now();
         this.queueInfo = new QueueInfo(category, estimatedTime, table, timeEntered);
         Log.i("Queue Info Created", queueInfo.toString());
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -128,7 +128,7 @@ public class Student extends Family125 implements SendQueue {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
-                                    Log.i("Exited Queue", task.getResult().toString());
+                                    Log.i("Exited Queue", "Bye");
                                 } else {
                                     Log.w("Exit Failed", task.getException());
                                 }
