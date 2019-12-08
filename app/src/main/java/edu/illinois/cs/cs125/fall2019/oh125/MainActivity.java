@@ -63,8 +63,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        final FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        // Floating button with Ben's image
+        // Link to CS125 Forum Page when clicked
+        FloatingActionButton fabBen = findViewById(R.id.fabBen);
+        fabBen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(@NonNull View view) {
                 Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
@@ -72,6 +74,19 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // Floating button with Geoff's image
+        // Link to CS125 'Learn' Page when clicked
+        FloatingActionButton fabGeoff = findViewById(R.id.fabGeoff);
+        fabGeoff.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(@NonNull View view) {
+                Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("https://cs125.cs.illinois.edu/learn/"));
+                startActivity(intent);
+            }
+        });
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each

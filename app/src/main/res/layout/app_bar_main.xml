@@ -24,12 +24,21 @@
     <include layout="@layout/content_main" />
 
     <edu.illinois.cs.cs125.fall2019.oh125.MovableFloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/fabBen"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="bottom|end"
         app:backgroundTint="#FFFFFF"
         app:maxImageSize="56dp"
         app:srcCompat="@drawable/ben" />
+
+    <edu.illinois.cs.cs125.fall2019.oh125.MovableFloatingActionButton
+        android:id="@+id/fabGeoff"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom|start"
+        app:backgroundTint="#FFFFFF"
+        app:maxImageSize="56dp"
+        app:srcCompat="@drawable/geoff" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

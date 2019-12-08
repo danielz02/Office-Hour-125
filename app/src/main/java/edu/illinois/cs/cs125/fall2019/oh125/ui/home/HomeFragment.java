@@ -40,6 +40,11 @@ public class HomeFragment extends Fragment {
     private FirebaseAuth mAuth;
     private Family125 user;
 
+    TextView studentCount;
+    WebView webCalendar;
+    TextView caCount;
+    TextView taCount;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
@@ -47,6 +52,10 @@ public class HomeFragment extends Fragment {
         // Initialize instance variable
         mAuth = FirebaseAuth.getInstance();
 
+        studentCount = root.findViewById(R.id.studentCount);
+        webCalendar = root.findViewById(R.id.webCalendar);
+        caCount = root.findViewById(R.id.caCount);
+        taCount = root.findViewById(R.id.taCount);
         return root;
     }
 
@@ -88,7 +97,7 @@ public class HomeFragment extends Fragment {
     public void onStart() {
         super.onStart();
         // Load Google Calendar Page
-        WebView webCalendar = getView().findViewById(R.id.webCalendar);
+//        WebView webCalendar = getView().findViewById(R.id.webCalendar);
         String webCalendarHtml = getResources().getString(R.string.calendar_url);
         webCalendar.setWebViewClient(new WebViewClient());
         webCalendar.getSettings().setJavaScriptEnabled(true);
@@ -111,7 +120,6 @@ public class HomeFragment extends Fragment {
                             Log.w("Listen Error for Total CA Number", e);
                         } else {
                             int newCount = queryDocumentSnapshots.getDocuments().size();
-                            TextView caCount = getView().findViewById(R.id.caCount);
                             caCount.setText(String.format(getResources().getString(R.string.ca_count),
                                     newCount));
                         }
@@ -130,8 +138,7 @@ public class HomeFragment extends Fragment {
                             Log.w("Listen Error for Total TA Number", e);
                         } else {
                             int newCount = queryDocumentSnapshots.getDocuments().size();
-                            TextView ta_Count = getView().findViewById(R.id.taCount);
-                            ta_Count.setText(String.format(getResources().getString(R.string.ta_count),
+                            taCount.setText(String.format(getResources().getString(R.string.ta_count),
                                     newCount));
                         }
                     }
@@ -283,7 +290,6 @@ public class HomeFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<Integer> task) {
                 if (task.isSuccessful()) {
-                    TextView studentCount = getView().findViewById(R.id.studentCount);
                     studentCount.setText(String.valueOf(task.getResult()));
                 } else {
                     Log.w("Total Student Display Failed", task.getException());
@@ -303,7 +309,6 @@ public class HomeFragment extends Fragment {
                             Log.w("Listen Error for Total Student Number", e);
                         } else {
                             int newCount = queryDocumentSnapshots.getDocuments().size();
-                            TextView studentCount = getView().findViewById(R.id.studentCount);
                             studentCount.setText(String.valueOf(newCount));
                         }
                     }
