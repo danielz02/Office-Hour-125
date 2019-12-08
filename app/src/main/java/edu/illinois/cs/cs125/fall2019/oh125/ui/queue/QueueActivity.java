@@ -19,7 +19,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.nio.file.FileAlreadyExistsException;
 import edu.illinois.cs.cs125.fall2019.oh125.Family125;
 import edu.illinois.cs.cs125.fall2019.oh125.MainActivity;
 import edu.illinois.cs.cs125.fall2019.oh125.R;

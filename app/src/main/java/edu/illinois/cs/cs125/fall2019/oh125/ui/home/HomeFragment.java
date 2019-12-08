@@ -27,6 +27,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import edu.illinois.cs.cs125.fall2019.oh125.Family125;
 import edu.illinois.cs.cs125.fall2019.oh125.R;
+import edu.illinois.cs.cs125.fall2019.oh125.Student;
 import edu.illinois.cs.cs125.fall2019.oh125.Summary;
 import edu.illinois.cs.cs125.fall2019.oh125.ui.StaffPortal;
 import edu.illinois.cs.cs125.fall2019.oh125.ui.queue.QueueActivity;
@@ -96,6 +97,7 @@ public class HomeFragment extends Fragment {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         if (!this.user.getRole().equals("Student")) {
+            // Staff (CA or TA)
             // If the user is not student, then set staffPortal page visible.
             Button staffPortalButton = view.findViewById(R.id.staffPortal);
             staffPortalButton.setVisibility(View.VISIBLE);
@@ -107,17 +109,60 @@ public class HomeFragment extends Fragment {
                     startActivity(intent);
                 }
             });
-            // Set queue request button invisible
+            // Set queue request and exit queue buttons invisible
             Button queue = getView().findViewById(R.id.queueRequestButton);
             queue.setVisibility(View.GONE);
         } else {
-            // When student press queue request button, start queue request activity
-            Button queue = getView().findViewById(R.id.queueRequestButton);
-            queue.setOnClickListener(new View.OnClickListener() {
+            // Student
+            final Button queue = getView().findViewById(R.id.queueRequestButton);
+            final Button exitQueue = getView().findViewById(R.id.exitQueue);
+
+            // If Student already In queue, set exitQueue button visible and queueRequest button invisible
+            // When exitQueue button clicked, delete current student's record in the queue
+            String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+            Student.getInstance(email).addOnCompleteListener(new OnCompleteListener<Family125>() {
                 @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(getActivity(), QueueActivity.class);
-                    startActivity(intent);
+                public void onComplete(@NonNull Task<Family125> task) {
+                    if (task.isSuccessful()) {
+                        final Student student = (Student) task.getResult();
+                        if (student.getIsInQueue()) {
+                            exitQueue.setVisibility(View.VISIBLE);
+                            queue.setVisibility(View.GONE);
+                            exitQueue.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(final View view) {
+                                    student.exitQueue()
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+//                                                        Log.i("Exited Queue",
+//                                                                student.getQueueInfo().toString());
+                                                        setUpUi(view);
+                                                    } else {
+                                                        Log.w("Exit queue failed",
+                                                                task.getException());
+                                                        Toast.makeText(getContext(),
+                                                                "Exit queue failed",
+                                                                Toast.LENGTH_LONG).show();
+                                                    }
+
+                                                }
+                                            });
+                                }
+                            });
+                        } else {
+                            // If student is not in queue
+                            // When student press queue request button, start queue request activity
+                            queue.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Intent intent = new Intent(getActivity(), QueueActivity.class);
+                                    startActivity(intent);
+                                }
+                            });
+                        }
+                    }
                 }
             });
         }

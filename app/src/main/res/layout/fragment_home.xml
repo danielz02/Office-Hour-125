@@ -119,6 +119,13 @@
             android:text="@string/queue_request" />
 
         <Button
+            android:id="@+id/exitQueue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Exit Queue"
+            android:visibility="gone" />
+
+        <Button
             android:id="@+id/taReserveButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
