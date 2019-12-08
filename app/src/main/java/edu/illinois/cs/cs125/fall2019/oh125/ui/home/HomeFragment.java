@@ -227,6 +227,10 @@ public class HomeFragment extends Fragment {
                             public void onClick(View view) {
                                 Intent intent = new Intent(getActivity(), QueueActivity.class);
                                 startActivity(intent);
+                                if (student.getIsInQueue()) {
+                                    exitQueue.setVisibility(View.VISIBLE);
+                                    queue.setVisibility(View.GONE);
+                                }
                             }
                         });
                     }

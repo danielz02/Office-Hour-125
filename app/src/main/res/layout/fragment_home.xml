@@ -149,7 +149,8 @@
         <WebView
             android:id="@+id/webCalendar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_marginTop="15sp" />
 
         <TextView
             android:id="@+id/text_home"

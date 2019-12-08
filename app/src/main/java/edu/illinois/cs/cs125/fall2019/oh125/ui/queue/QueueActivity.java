@@ -98,11 +98,6 @@ public class QueueActivity extends AppCompatActivity {
                                                         Log.i("Entered Queue",
                                                                 student.getQueueInfo().toString());
                                                         // Successfully entered queue
-                                                        // Set the button exit Queue in Home Fragment Visible
-                                                        final Button queue = findViewById(R.id.queueRequestButton);
-                                                        final Button exitQueue = findViewById(R.id.exitQueue);
-                                                        exitQueue.setVisibility(View.VISIBLE);
-                                                        queue.setVisibility(View.GONE);
                                                         // Create a toast
                                                         Toast toast = Toast.makeText(QueueActivity.this,
                                                                 "Congrats! You've entered the queue!",
@@ -110,10 +105,10 @@ public class QueueActivity extends AppCompatActivity {
                                                         toast.setGravity(Gravity.CENTER_VERTICAL|
                                                                 Gravity.CENTER_HORIZONTAL, 0, 0);
                                                         toast.show();
-//                                                        Intent intent = new Intent(QueueActivity.this,
-//                                                                MainActivity.class);
-//                                                        startActivity(intent);
-//                                                        finish();
+                                                        Intent intent = new Intent(QueueActivity.this,
+                                                                MainActivity.class);
+                                                        startActivity(intent);
+                                                        finish();
                                                     } else {
                                                         Log.w("Enter queue failed",
                                                                 task.getException());
