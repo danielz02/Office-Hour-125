@@ -74,10 +74,18 @@ public class CA extends Family125 implements ManageQueue {
                     public List<Student> then(@NonNull Task<List<Student>> task) {
                         for (Student studentInQueue: task.getResult()) {
                             studentInQueue.initializeQueueInfo()
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    .addOnSuccessListener(new OnSuccessListener<Student>() {
                                         @Override
-                                        public void onSuccess(Void aVoid) { }
-                                    });
+                                        public void onSuccess(Student student) {
+
+                                        }
+                                    }).continueWith(new Continuation<Student, Student>() {
+                                        @Override
+                                        public Student then(@NonNull Task<Student> task) {
+                                            return task.getResult();
+                                        }
+                            });
+
                         }
                         try {
                             Tasks.await(task);
@@ -86,7 +94,7 @@ public class CA extends Family125 implements ManageQueue {
                         } catch (ExecutionException e) {
                             Log.w("getQueue Failed 2", e);
                         } finally {
-                            Log.i("getQueue Succeed", task.getResult().toString());
+                            Log.i("getQueue Succeed", task.getResult().get(0).getQueueInfo().toString());
                         }
                         return task.getResult();
                     }
