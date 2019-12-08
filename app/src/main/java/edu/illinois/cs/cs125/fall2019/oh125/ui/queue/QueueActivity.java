@@ -124,6 +124,7 @@ public class QueueActivity extends AppCompatActivity {
                                 } catch (Exception e) {
                                     // Illegal Arg or File Already Exist
                                     // Create a toast
+                                    Log.w("Enter Queue Failed", e);
                                     Toast toast = Toast.makeText(QueueActivity.this,
                                             e.getMessage(),
                                             Toast.LENGTH_LONG);

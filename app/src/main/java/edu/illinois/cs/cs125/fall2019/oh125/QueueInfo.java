@@ -62,7 +62,7 @@ public class QueueInfo {
 
     public String getHumanTime() {
         DateFormat formatter =  DateFormat.getTimeInstance(DateFormat.SHORT, Locale.ENGLISH);
-        return formatter.format(this.timeEntered);
+        return formatter.format(this.timeEntered.toDate());
     }
 
     @Override @NonNull
