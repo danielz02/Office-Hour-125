@@ -115,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             loginPrompt();
         }
+        addChangeListener();
     }
 
     @Override
@@ -188,35 +189,21 @@ public class MainActivity extends AppCompatActivity {
                 .into(avatar);
         if (this.user instanceof Student) {
             final Student userAsStudent = (Student) this.user;
-            userAsStudent.initializeQueueInfo()
-                    .addOnCompleteListener(new OnCompleteListener<Student>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Student> task) {
-                        if (task.isSuccessful()) {
-                            try {
-                                Log.i("Initialization Succeed",
-                                        userAsStudent.getQueueInfo().toString());
-                                Toast.makeText(getApplicationContext(),
-                                        userAsStudent.getQueueInfo().toString(),
-                                        Toast.LENGTH_LONG).show();
-                                Log.i("Student Queue Info Query Succeed",
-                                        userAsStudent.getQueueInfo().toString());
-                                Log.i("User NetID", userAsStudent.getNetId());
-                            } catch (NullPointerException e) {
-                                Log.w("Student not in queue", e);
-                            }
-
-                        } else {
-                            Log.w("Initialization Failed", task.getException());
-                        }
-                    }
-                });
+            try {
+                Log.i("QueueInfo Initialization Succeed",
+                        userAsStudent.getQueueInfo().toString());
+                Toast.makeText(getApplicationContext(),
+                        userAsStudent.getQueueInfo().toString(),
+                        Toast.LENGTH_LONG).show();
+                Log.i("User NetID", userAsStudent.getNetId());
+            } catch (NullPointerException e) {
+                Log.w("Student not in queue", e);
+            }
         }
         if (!this.user.getRole().equals("Student")) {
             Button staffPortalButton = findViewById(R.id.staffPortal);
             staffPortalButton.setVisibility(View.VISIBLE);
         }
-        addChangeListener();
     }
 
     /**
@@ -283,6 +270,12 @@ public class MainActivity extends AppCompatActivity {
                         } else {
                             int newCount = queryDocumentSnapshots.getDocuments().size();
                             TextView studentCount = findViewById(R.id.studentCount);
+                            Button here = findViewById(R.id.here);
+                            try {
+                                Log.i("Debugging", here.toString());
+                            } catch (NullPointerException ee) {
+                                Log.w("error!", ee);
+                            }
                             studentCount.setText(String.valueOf(newCount));
                         }
                     }

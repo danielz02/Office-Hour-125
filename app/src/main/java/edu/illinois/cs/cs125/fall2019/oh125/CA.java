@@ -74,15 +74,15 @@ public class CA extends Family125 implements ManageQueue {
                     public List<Student> then(@NonNull Task<List<Student>> task) {
                         for (Student studentInQueue: task.getResult()) {
                             studentInQueue.initializeQueueInfo()
-                                    .addOnSuccessListener(new OnSuccessListener<Student>() {
+                                    .addOnSuccessListener(new OnSuccessListener<Family125>() {
                                         @Override
-                                        public void onSuccess(Student student) {
+                                        public void onSuccess(Family125 student) {
 
                                         }
-                                    }).continueWith(new Continuation<Student, Student>() {
+                                    }).continueWith(new Continuation<Family125, Student>() {
                                         @Override
-                                        public Student then(@NonNull Task<Student> task) {
-                                            return task.getResult();
+                                        public Student then(@NonNull Task<Family125> task) {
+                                            return (Student)  task.getResult();
                                         }
                             });
 
