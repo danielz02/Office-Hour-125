@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -189,9 +190,9 @@ public class MainActivity extends AppCompatActivity {
         if (this.user instanceof Student) {
             final Student userAsStudent = (Student) this.user;
             userAsStudent.initializeQueueInfo()
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    .addOnCompleteListener(new OnCompleteListener<Student>() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
+                    public void onComplete(@NonNull Task<Student> task) {
                         if (task.isSuccessful()) {
                             try {
                                 Log.i("Initialization Succeed",
