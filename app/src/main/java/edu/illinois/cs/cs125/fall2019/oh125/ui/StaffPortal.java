@@ -69,9 +69,9 @@ public class StaffPortal extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 // Get all info of the student's queueRequest form
                                 Log.i("Queue Info Fetch Succeed", task.getResult().toString());
-                                String name = currentStudent.getName();
+                                String name = "  " + currentStudent.getName();
                                 String category = task.getResult().getString("category");
-                                String estimatedTime = "" + task.getResult().getLong("estimatedTime");
+                                String estimatedTime = "Estimated: " + task.getResult().getLong("estimatedTime") + "min";
                                 String tableNum = "Table #" + task.getResult().getLong("table");
                                 String enteredTime = "" + task.getResult().getString("humanTime");
 
