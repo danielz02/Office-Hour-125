@@ -16,7 +16,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -40,10 +39,6 @@ public class HomeFragment extends Fragment {
     private FirebaseAuth mAuth;
     private Family125 user;
 
-    TextView studentCount;
-    WebView webCalendar;
-    TextView caCount;
-    TextView taCount;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -52,10 +47,6 @@ public class HomeFragment extends Fragment {
         // Initialize instance variable
         mAuth = FirebaseAuth.getInstance();
 
-        studentCount = root.findViewById(R.id.studentCount);
-        webCalendar = root.findViewById(R.id.webCalendar);
-        caCount = root.findViewById(R.id.caCount);
-        taCount = root.findViewById(R.id.taCount);
         return root;
     }
 
@@ -97,7 +88,7 @@ public class HomeFragment extends Fragment {
     public void onStart() {
         super.onStart();
         // Load Google Calendar Page
-//        WebView webCalendar = getView().findViewById(R.id.webCalendar);
+        WebView webCalendar = getView().findViewById(R.id.webCalendar);
         String webCalendarHtml = getResources().getString(R.string.calendar_url);
         webCalendar.setWebViewClient(new WebViewClient());
         webCalendar.getSettings().setJavaScriptEnabled(true);
@@ -251,6 +242,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<Integer> task) {
                 if (task.isSuccessful()) {
+                    TextView studentCount = view.findViewById(R.id.studentCount);
                     studentCount.setText(String.valueOf(task.getResult()));
                 } else {
                     Log.w("Total Student Display Failed", task.getException());
