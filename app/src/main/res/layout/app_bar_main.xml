@@ -28,6 +28,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="bottom|end"
+        android:tooltipText="125 Forum"
         app:backgroundTint="#FFFFFF"
         app:maxImageSize="56dp"
         app:srcCompat="@drawable/ben" />
@@ -37,6 +38,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="bottom|start"
+        android:tooltipText="125 Learn Page"
         app:backgroundTint="#FFFFFF"
         app:maxImageSize="56dp"
         app:srcCompat="@drawable/geoff" />

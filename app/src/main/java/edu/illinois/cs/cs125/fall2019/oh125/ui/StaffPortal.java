@@ -1,10 +1,14 @@
 package edu.illinois.cs.cs125.fall2019.oh125.ui;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -76,7 +80,7 @@ public class StaffPortal extends AppCompatActivity {
                                 String enteredTime = "" + task.getResult().getString("humanTime");
 
                                 // Get all text views in chunk_task
-                                View chunkTask = getLayoutInflater().inflate(R.layout.chunk_task,
+                                final View chunkTask = getLayoutInflater().inflate(R.layout.chunk_task,
                                         taskList, false);
                                 TextView studentName = chunkTask.findViewById(R.id.studentName);
                                 TextView categ = chunkTask.findViewById(R.id.category);
@@ -90,6 +94,35 @@ public class StaffPortal extends AppCompatActivity {
                                 timeNeeded.setText(estimatedTime);
                                 table.setText(tableNum);
                                 enterTime.setText(enteredTime);
+
+                                // CheckBox getTask
+                                final CheckBox getTask = chunkTask.findViewById(R.id.getTask);
+                                getTask.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        new AlertDialog.Builder(StaffPortal.this)
+                                                .setTitle("Getting new task...")
+                                                .setMessage("Are you sure you want to take this task?")
+                                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                                        //set what would happen when positive button is clicked
+                                                        /**
+                                                         * feature to be added later
+                                                         * Only set the chunk gone for now
+                                                         */
+                                                        chunkTask.setVisibility(View.GONE);
+                                                    }
+                                                })
+                                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                                        //Uncheck the checkbox when negative button is clicked
+                                                        getTask.setChecked(false);
+                                                    }
+                                                }).show();
+                                    }
+                                });
 
                                 // Add chunk to taskList in Staff Portal Page
                                 taskList.addView(chunkTask);
