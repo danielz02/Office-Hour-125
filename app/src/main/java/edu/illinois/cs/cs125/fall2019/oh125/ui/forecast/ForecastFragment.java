@@ -1,5 +1,6 @@
 package edu.illinois.cs.cs125.fall2019.oh125.ui.forecast;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +23,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import de.cketti.mailto.EmailIntentBuilder;
 import edu.illinois.cs.cs125.fall2019.oh125.Family125;
 import edu.illinois.cs.cs125.fall2019.oh125.MD5Util;
 import edu.illinois.cs.cs125.fall2019.oh125.R;
@@ -57,7 +59,7 @@ public class ForecastFragment extends Fragment {
                             task.getResult().toObjects(Family125.class);
                             for (DocumentSnapshot documentSnapshot: task.getResult()) {
                                 Log.i("Fetching TA", documentSnapshot.toString());
-                                String email = documentSnapshot.getString("email");
+                                final String email = documentSnapshot.getString("email");
                                 String identity = "TA";
                                 String name = documentSnapshot.getString("name");
 
@@ -77,6 +79,18 @@ public class ForecastFragment extends Fragment {
                                 emailText.setText(email);
                                 identityText.setText(identity);
                                 nameText.setText(name);
+
+                                avatar.setOnLongClickListener(new View.OnLongClickListener() {
+                                    @Override
+                                    public boolean onLongClick(View view) {
+                                        EmailIntentBuilder.from(getActivity())
+                                                .to(email)
+                                                .subject("Regarding Office Hour")
+                                                .body("From OfficeHour 125")
+                                                .start();
+                                        return true;
+                                    }
+                                });
 
                                 caList.addView(chunkTask);
                             }
