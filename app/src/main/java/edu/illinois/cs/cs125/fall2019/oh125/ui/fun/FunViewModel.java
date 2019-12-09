@@ -1,16 +1,16 @@
-package edu.illinois.cs.cs125.fall2019.oh125.ui.share;
+package edu.illinois.cs.cs125.fall2019.oh125.ui.fun;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class ShareViewModel extends ViewModel {
+public class FunViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public ShareViewModel() {
+    public FunViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is share fragment");
+        mText.setValue("This is fun fragment");
     }
 
     public LiveData<String> getText() {

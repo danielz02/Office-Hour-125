@@ -24,6 +24,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import edu.illinois.cs.cs125.fall2019.oh125.Family125;
@@ -38,11 +39,10 @@ public class HomeFragment extends Fragment {
     private HomeViewModel homeViewModel;
     private FirebaseAuth mAuth;
     private Family125 user;
+    private ListenerRegistration taListener;
+    private ListenerRegistration caListener;
+    private ListenerRegistration studentListener;
 
-    private TextView studentCount;
-    private WebView webCalendar;
-    private TextView caCount;
-    private TextView taCount;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -51,10 +51,6 @@ public class HomeFragment extends Fragment {
         // Initialize instance variable
         mAuth = FirebaseAuth.getInstance();
 
-        studentCount = root.findViewById(R.id.studentCount);
-        webCalendar = root.findViewById(R.id.webCalendar);
-        caCount = root.findViewById(R.id.caCount);
-        taCount = root.findViewById(R.id.taCount);
         return root;
     }
 
@@ -96,8 +92,9 @@ public class HomeFragment extends Fragment {
     public void onStart() {
         super.onStart();
         // Load Google Calendar Page
-//        WebView webCalendar = getView().findViewById(R.id.webCalendar);
+        WebView webCalendar = getView().findViewById(R.id.webCalendar);
         String webCalendarHtml = getResources().getString(R.string.calendar_url);
+
         webCalendar.setWebViewClient(new WebViewClient());
         webCalendar.getSettings().setJavaScriptEnabled(true);
         webCalendar.loadUrl(webCalendarHtml);
@@ -247,6 +244,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<Integer> task) {
                 if (task.isSuccessful()) {
+                    TextView studentCount = getView().findViewById(R.id.studentCount);
                     studentCount.setText(String.valueOf(task.getResult()));
                 } else {
                     Log.w("Total Student Display Failed", task.getException());
@@ -259,7 +257,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<Integer> task) {
                 if (task.isSuccessful()) {
-//                    TextView caCount = view.findViewById(R.id.caCount);
+                    TextView caCount = view.findViewById(R.id.caCount);
                     caCount.setText(String.format(getResources().getString(R.string.ca_count),
                             task.getResult()));
                 } else {
@@ -273,7 +271,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<Integer> task) {
                 if (task.isSuccessful()) {
-//                    TextView taCount = view.findViewById(R.id.taCount);
+                    TextView taCount = view.findViewById(R.id.taCount);
                     taCount.setText(String.format(getResources().getString(R.string.ta_count),
                             task.getResult()));
                 } else {
@@ -282,15 +280,10 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        TextView studentCount = view.findViewById(R.id.studentCount);
-        try {
-            Log.i("Debugging", studentCount.toString());
-        } catch (NullPointerException e) {
-            Log.w("error!", e);
-        }
+
 
         // Listener for any change in the total number of student at Office Hour
-        db.collection("user")
+        this.studentListener = db.collection("user")
                 .whereEqualTo("role", "Student")
                 .whereEqualTo("isAtOfficeHour", true)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -308,7 +301,7 @@ public class HomeFragment extends Fragment {
                 });
 
         // Listener for any change in the total number of TAs at Office Hour
-        db.collection("user")
+        this.taListener = db.collection("user")
                 .whereEqualTo("role", "TA")
                 .whereEqualTo("isAtOfficeHour", true)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -319,15 +312,16 @@ public class HomeFragment extends Fragment {
                             Log.w("Listen Error for Total TA Number", e);
                         } else {
                             int newCount = queryDocumentSnapshots.getDocuments().size();
-//                            TextView caCount = view.findViewById(R.id.taCount);
+                            TextView taCount = view.findViewById(R.id.taCount);
                             taCount.setText(String.format(getResources().getString(R.string.ta_count),
                                     newCount));
                         }
                     }
                 });
 
+
         // Listener for any change in the total number of CAs at Office Hour
-        db.collection("user")
+        this.caListener = db.collection("user")
                 .whereEqualTo("role", "CA")
                 .whereEqualTo("isAtOfficeHour", true)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -337,8 +331,9 @@ public class HomeFragment extends Fragment {
                         if (e != null) {
                             Log.w("Listen Error for Total CA Number", e);
                         } else {
+                            final TextView taCount = view.findViewById(R.id.taCount);
                             int newCount = queryDocumentSnapshots.getDocuments().size();
-                            TextView caCount = getActivity().findViewById(R.id.caCount);
+                            TextView caCount = view.findViewById(R.id.caCount);
                             caCount.setText(String.format(getResources().getString(R.string.ca_count),
                                     newCount));
                         }
