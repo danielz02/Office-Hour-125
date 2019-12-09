@@ -184,7 +184,7 @@ public class Student extends Family125 implements SendQueue {
         return "Student Name: " + this.getName() + "; Student NetID: " + this.getNetId();
     }
 
-    Task<Family125> initializeQueueInfo() {
+    public Task<Family125> initializeQueueInfo() {
         return QueueInfo.getInstance(this.getEmail()).addOnCompleteListener(new OnCompleteListener<QueueInfo>() {
             @Override
             public void onComplete(@NonNull Task<QueueInfo> task) {
