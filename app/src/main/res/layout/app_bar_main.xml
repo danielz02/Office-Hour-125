@@ -25,22 +25,24 @@
 
     <edu.illinois.cs.cs125.fall2019.oh125.MovableFloatingActionButton
         android:id="@+id/fabBen"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        app:fabCustomSize="56dp"
         android:layout_gravity="bottom|end"
         android:tooltipText="125 Forum"
         app:backgroundTint="#FFFFFF"
         app:maxImageSize="56dp"
-        app:srcCompat="@drawable/ben" />
+        app:srcCompat="@drawable/round_ben" />
 
     <edu.illinois.cs.cs125.fall2019.oh125.MovableFloatingActionButton
         android:id="@+id/fabGeoff"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        app:fabCustomSize="56dp"
         android:layout_gravity="bottom|start"
         android:tooltipText="125 Learn Page"
         app:backgroundTint="#FFFFFF"
         app:maxImageSize="56dp"
-        app:srcCompat="@drawable/geoff" />
+        app:srcCompat="@drawable/round_geoff" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
