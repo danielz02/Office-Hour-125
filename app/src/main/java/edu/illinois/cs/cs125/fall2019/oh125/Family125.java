@@ -10,6 +10,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -156,24 +157,31 @@ public class Family125 implements OfficeHourStatus {
                     Log.w("getInstance Query Failed", task.getException());
                 }
             }
-        }).continueWith(new Continuation<DocumentSnapshot, Family125>() {
+        }).continueWithTask(new Continuation<DocumentSnapshot, Task<Family125>>() {
             @Override
-            public Family125 then(Task<DocumentSnapshot> task) {
+            public Task<Family125> then(@NonNull Task<DocumentSnapshot> task) throws Exception {
                 String userRole = task.getResult().getString("role");
                 Log.i("User Role", userRole);
                 switch (userRole) {
                     case "CA":
                         Log.i("CA instance initialized", task.getResult().toObject(CA.class).toString());
-                        return task.getResult().toObject(CA.class);
+                        Family125 result = task.getResult().toObject(CA.class);
+                        return Tasks.forResult(result);
                     case "Student":
                         final Student toReturn = task.getResult().toObject(Student.class);
                         Log.i("Student instance initialized", toReturn.toString());
-                        return toReturn;
+                        return toReturn.initializeQueueInfo();
                     default:
-                        return task.getResult().toObject(Family125.class);
+                        return Tasks.forResult(task.getResult().toObject(Family125.class));
                 }
             }
+        }).continueWith(new Continuation<Family125, Family125>() {
+            @Override
+            public Family125 then(@NonNull Task<Family125> task) throws Exception {
+                return task.getResult();
+            }
         });
+
         /**
         .continueWith(new Continuation<Family125, Family125>() {
             @Override

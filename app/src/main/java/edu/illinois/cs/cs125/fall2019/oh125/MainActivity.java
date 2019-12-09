@@ -5,14 +5,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
-import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -37,10 +36,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -195,31 +192,22 @@ public class MainActivity extends AppCompatActivity {
         userEmailView.setText(userEmailString);
         TextView userNameView = navigationView.getHeaderView(0).findViewById(R.id.userName);
         userNameView.setText(currentUser.getDisplayName());
+        ImageView avatar = findViewById(R.id.gravatar);
+        Glide.with(this)
+                .load("https://www.gravatar.com/avatar/" + MD5Util.md5Hex(userEmailString) + "?s=256")
+                .into(avatar);
         if (this.user instanceof Student) {
             final Student userAsStudent = (Student) this.user;
-            userAsStudent.initializeQueueInfo()
-                    .addOnCompleteListener(new OnCompleteListener<Student>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Student> task) {
-                        if (task.isSuccessful()) {
-                            try {
-                                Log.i("Initialization Succeed",
-                                        userAsStudent.getQueueInfo().toString());
-                                Toast.makeText(getApplicationContext(),
-                                        userAsStudent.getQueueInfo().toString(),
-                                        Toast.LENGTH_LONG).show();
-                                Log.i("Student Queue Info Query Succeed",
-                                        userAsStudent.getQueueInfo().toString());
-                                Log.i("User NetID", userAsStudent.getNetId());
-                            } catch (NullPointerException e) {
-                                Log.w("Student not in queue", e);
-                            }
-
-                        } else {
-                            Log.w("Initialization Failed", task.getException());
-                        }
-                    }
-                });
+            try {
+                Log.i("QueueInfo Initialization Succeed",
+                        userAsStudent.getQueueInfo().toString());
+                Toast.makeText(getApplicationContext(),
+                        userAsStudent.getQueueInfo().toString(),
+                        Toast.LENGTH_LONG).show();
+                Log.i("User NetID", userAsStudent.getNetId());
+            } catch (NullPointerException e) {
+                Log.w("Student not in queue", e);
+            }
         }
         if (!this.user.getRole().equals("Student")) {
             Button staffPortalButton = findViewById(R.id.staffPortal);
