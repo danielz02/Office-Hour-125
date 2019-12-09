@@ -9,10 +9,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
@@ -45,44 +48,56 @@ public class StaffPortal extends AppCompatActivity {
                         }
                     });
                 } else {
-                    Log.i("CA get queue", "unsuccessful");
+                    Log.w("CA getQueue Failed", task.getException());
                 }
             }
         });
     }
 
     private void loadTasks(List<Student> students) {
-        LinearLayout taskList = findViewById(R.id.taskList);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final LinearLayout taskList = findViewById(R.id.taskList);
         taskList.removeAllViews();
 
-        for (Student student: students) {
-            QueueInfo info = student.getQueueInfo();
+        for (final Student currentStudent: students) {
+            db.collection("queue")
+                    .document(currentStudent.getNetId())
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                // Get all info of the student's queueRequest form
+                                Log.i("Queue Info Fetch Succeed", task.getResult().toString());
+                                String name = currentStudent.getName();
+                                String category = task.getResult().getString("category");
+                                String estimatedTime = "" + task.getResult().getLong("estimatedTime");
+                                String tableNum = "Table #" + task.getResult().getLong("table");
+                                String enteredTime = "" + task.getResult().getString("humanTime");
 
-            // Get all info of the student's queueRequest form
-            String name = student.getName();
-            String category = info.getCategory();
-            String estimatedTime = "" + info.getEstimatedTime();
-            String tableNum = "Table #" + info.getTable();
-            String enteredTime = "" + info.getTimeEntered();
+                                // Get all text views in chunk_task
+                                View chunkTask = getLayoutInflater().inflate(R.layout.chunk_task,
+                                        taskList, false);
+                                TextView studentName = chunkTask.findViewById(R.id.studentName);
+                                TextView categ = chunkTask.findViewById(R.id.category);
+                                TextView timeNeeded = chunkTask.findViewById(R.id.timeNeeded);
+                                TextView table = chunkTask.findViewById(R.id.studentTable);
+                                TextView enterTime = chunkTask.findViewById(R.id.enteredTime);
 
-            // Get all text views in chunk_task
-            View chunkTask = getLayoutInflater().inflate(R.layout.chunk_task,
-                    taskList, false);
-            TextView studentName = chunkTask.findViewById(R.id.studentName);
-            TextView categ = chunkTask.findViewById(R.id.category);
-            TextView timeNeeded = chunkTask.findViewById(R.id.timeNeeded);
-            TextView table = chunkTask.findViewById(R.id.studentTable);
-            TextView enterTime = chunkTask.findViewById(R.id.enteredTime);
+                                // Display info in chunk task
+                                studentName.setText(name);
+                                categ.setText(category);
+                                timeNeeded.setText(estimatedTime);
+                                table.setText(tableNum);
+                                enterTime.setText(enteredTime);
 
-            // Display info in chunk task
-            studentName.setText(name);
-            categ.setText(category);
-            timeNeeded.setText(estimatedTime);
-            table.setText(tableNum);
-            enterTime.setText(enteredTime);
-
-            // Add chunk to taskList in Staff Portal Page
-            taskList.addView(chunkTask);
+                                // Add chunk to taskList in Staff Portal Page
+                                taskList.addView(chunkTask);
+                            } else {
+                                Log.w("QueueInfo Initialization Failed", task.getException());
+                            }
+                        }
+                    });
         }
     }
 }
