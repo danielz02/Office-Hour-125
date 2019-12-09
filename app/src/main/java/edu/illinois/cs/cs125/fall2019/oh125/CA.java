@@ -48,6 +48,7 @@ public class CA extends Family125 implements ManageQueue {
         return db.collection("user")
                 .whereEqualTo("role", "Student")
                 .whereEqualTo("isInQueue", true)
+                .orderBy("timestamp")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
