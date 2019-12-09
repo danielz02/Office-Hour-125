@@ -28,7 +28,6 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import edu.illinois.cs.cs125.fall2019.oh125.Family125;
-import edu.illinois.cs.cs125.fall2019.oh125.MainActivity;
 import edu.illinois.cs.cs125.fall2019.oh125.R;
 import edu.illinois.cs.cs125.fall2019.oh125.Student;
 import edu.illinois.cs.cs125.fall2019.oh125.Summary;
@@ -41,20 +40,22 @@ public class HomeFragment extends Fragment {
     private FirebaseAuth mAuth;
     private Family125 user;
 
+    TextView studentCount;
+    WebView webCalendar;
+    TextView caCount;
+    TextView taCount;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
-        final TextView textView = root.findViewById(R.id.text_home);
-        homeViewModel.getText().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
         // Initialize instance variable
         mAuth = FirebaseAuth.getInstance();
 
+        studentCount = root.findViewById(R.id.studentCount);
+        webCalendar = root.findViewById(R.id.webCalendar);
+        caCount = root.findViewById(R.id.caCount);
+        taCount = root.findViewById(R.id.taCount);
         return root;
     }
 
@@ -96,13 +97,12 @@ public class HomeFragment extends Fragment {
     public void onStart() {
         super.onStart();
         // Load Google Calendar Page
-        WebView webCalendar = getView().findViewById(R.id.webCalendar);
+//        WebView webCalendar = getView().findViewById(R.id.webCalendar);
         String webCalendarHtml = getResources().getString(R.string.calendar_url);
         webCalendar.setWebViewClient(new WebViewClient());
         webCalendar.getSettings().setJavaScriptEnabled(true);
         webCalendar.loadUrl(webCalendarHtml);
     }
-
 
     /**
      * Perform all the UI setup after user login
@@ -251,7 +251,6 @@ public class HomeFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<Integer> task) {
                 if (task.isSuccessful()) {
-                    TextView studentCount = getView().findViewById(R.id.studentCount);
                     studentCount.setText(String.valueOf(task.getResult()));
                 } else {
                     Log.w("Total Student Display Failed", task.getException());
