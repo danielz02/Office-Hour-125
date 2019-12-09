@@ -126,6 +126,8 @@ public class HomeFragment extends Fragment {
             // Set queue request and exit queue buttons invisible
             Button queue = getView().findViewById(R.id.queueRequestButton);
             queue.setVisibility(View.GONE);
+
+            addChangeListener(view);
         } else {
             // Student
             final Button queue = getView().findViewById(R.id.queueRequestButton);
@@ -192,6 +194,8 @@ public class HomeFragment extends Fragment {
                     }
                 }
             });
+
+            addChangeListener(view);
         }
 
         // Button "I'm at Office Hour" and "Leave Office Hour"
@@ -282,6 +286,78 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
+
+    }
+
+    /**
+     * A method to register for all change listener of data summary
+     */
+    private void addChangeListener(final View view) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        TextView studentCount = view.findViewById(R.id.studentCount);
+        try {
+            Log.i("Debugging", studentCount.toString());
+        } catch (NullPointerException e) {
+            Log.w("error!", e);
+        }
+
+        // Listener for any change in the total number of student at Office Hour
+        db.collection("user")
+                .whereEqualTo("role", "Student")
+                .whereEqualTo("isAtOfficeHour", true)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots,
+                                        @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w("Listen Error for Total Student Number", e);
+                        } else {
+                            int newCount = queryDocumentSnapshots.getDocuments().size();
+                            TextView studentCount = view.findViewById(R.id.studentCount);
+                            studentCount.setText(String.valueOf(newCount));
+                        }
+                    }
+                });
+
+        // Listener for any change in the total number of TAs at Office Hour
+        db.collection("user")
+                .whereEqualTo("role", "TA")
+                .whereEqualTo("isAtOfficeHour", true)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots,
+                                        @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w("Listen Error for Total TA Number", e);
+                        } else {
+                            int newCount = queryDocumentSnapshots.getDocuments().size();
+                            TextView caCount = view.findViewById(R.id.taCount);
+                            caCount.setText(String.format(getResources().getString(R.string.ta_count),
+                                    newCount));
+                        }
+                    }
+                });
+
+        // Listener for any change in the total number of CAs at Office Hour
+        db.collection("user")
+                .whereEqualTo("role", "CA")
+                .whereEqualTo("isAtOfficeHour", true)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots,
+                                        @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w("Listen Error for Total CA Number", e);
+                        } else {
+                            int newCount = queryDocumentSnapshots.getDocuments().size();
+                            TextView caCount = getActivity().findViewById(R.id.caCount);
+                            caCount.setText(String.format(getResources().getString(R.string.ca_count),
+                                    newCount));
+                        }
+                    }
+                });
+
     }
 
 

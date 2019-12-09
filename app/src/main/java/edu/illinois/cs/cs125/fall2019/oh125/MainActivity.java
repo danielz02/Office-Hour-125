@@ -7,12 +7,10 @@ import android.os.Bundle;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
-import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,10 +26,6 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -39,9 +33,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -115,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             loginPrompt();
         }
-        addChangeListener();
     }
 
     @Override
@@ -249,76 +239,6 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
         builder.show();
-    }
-
-    /**
-     * A method to register for all change listener of data summary
-     */
-    private void addChangeListener() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        // Listener for any change in the total number of student at Office Hour
-        db.collection("user")
-                .whereEqualTo("role", "Student")
-                .whereEqualTo("isAtOfficeHour", true)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots,
-                                        @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.w("Listen Error for Total Student Number", e);
-                        } else {
-                            int newCount = queryDocumentSnapshots.getDocuments().size();
-                            TextView studentCount = findViewById(R.id.studentCount);
-                            Button here = findViewById(R.id.here);
-                            try {
-                                Log.i("Debugging", here.toString());
-                            } catch (NullPointerException ee) {
-                                Log.w("error!", ee);
-                            }
-                            studentCount.setText(String.valueOf(newCount));
-                        }
-                    }
-                });
-
-        // Listener for any change in the total number of TAs at Office Hour
-        db.collection("user")
-                .whereEqualTo("role", "TA")
-                .whereEqualTo("isAtOfficeHour", true)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots,
-                                        @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.w("Listen Error for Total TA Number", e);
-                        } else {
-                            int newCount = queryDocumentSnapshots.getDocuments().size();
-                            TextView caCount = findViewById(R.id.taCount);
-                            caCount.setText(String.format(getResources().getString(R.string.ta_count),
-                                    newCount));
-                        }
-                    }
-                });
-
-        // Listener for any change in the total number of CAs at Office Hour
-        db.collection("user")
-                .whereEqualTo("role", "CA")
-                .whereEqualTo("isAtOfficeHour", true)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots,
-                                        @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.w("Listen Error for Total CA Number", e);
-                        } else {
-                            int newCount = queryDocumentSnapshots.getDocuments().size();
-                            TextView caCount = findViewById(R.id.caCount);
-                            caCount.setText(String.format(getResources().getString(R.string.ca_count),
-                                    newCount));
-                        }
-                    }
-                });
-
     }
 
 }
