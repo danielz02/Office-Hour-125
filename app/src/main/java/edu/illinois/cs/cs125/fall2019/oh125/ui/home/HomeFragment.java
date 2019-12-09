@@ -125,8 +125,6 @@ public class HomeFragment extends Fragment {
             // Set queue request and exit queue buttons invisible
             Button queue = getView().findViewById(R.id.queueRequestButton);
             queue.setVisibility(View.GONE);
-
-            addChangeListener(view);
         } else {
             // Student
             final Button queue = getView().findViewById(R.id.queueRequestButton);
@@ -161,7 +159,8 @@ public class HomeFragment extends Fragment {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {                                                        
-                                                    Log.i("Exited Queue", student.toString() + " exited");
+                                                    Log.i("Exited Queue",
+                                                            student.toString() + " exited");
 
                                                     exitQueue.setVisibility(View.GONE);
                                                     queue.setVisibility(View.VISIBLE);
@@ -193,8 +192,6 @@ public class HomeFragment extends Fragment {
                     }
                 }
             });
-
-            addChangeListener(view);
         }
 
         // Button "I'm at Office Hour" and "Leave Office Hour"
@@ -284,14 +281,6 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
-
-    }
-
-    /**
-     * A method to register for all change listener of data summary
-     */
-    private void addChangeListener(final View view) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         TextView studentCount = view.findViewById(R.id.studentCount);
         try {
