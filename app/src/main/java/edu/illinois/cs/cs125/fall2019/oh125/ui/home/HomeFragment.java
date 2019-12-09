@@ -40,10 +40,10 @@ public class HomeFragment extends Fragment {
     private FirebaseAuth mAuth;
     private Family125 user;
 
-    TextView studentCount;
-    WebView webCalendar;
-    TextView caCount;
-    TextView taCount;
+    private TextView studentCount;
+    private WebView webCalendar;
+    private TextView caCount;
+    private TextView taCount;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -263,7 +263,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<Integer> task) {
                 if (task.isSuccessful()) {
-                    TextView caCount = view.findViewById(R.id.caCount);
+//                    TextView caCount = view.findViewById(R.id.caCount);
                     caCount.setText(String.format(getResources().getString(R.string.ca_count),
                             task.getResult()));
                 } else {
@@ -277,7 +277,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<Integer> task) {
                 if (task.isSuccessful()) {
-                    TextView taCount = view.findViewById(R.id.taCount);
+//                    TextView taCount = view.findViewById(R.id.taCount);
                     taCount.setText(String.format(getResources().getString(R.string.ta_count),
                             task.getResult()));
                 } else {
@@ -331,8 +331,8 @@ public class HomeFragment extends Fragment {
                             Log.w("Listen Error for Total TA Number", e);
                         } else {
                             int newCount = queryDocumentSnapshots.getDocuments().size();
-                            TextView caCount = view.findViewById(R.id.taCount);
-                            caCount.setText(String.format(getResources().getString(R.string.ta_count),
+//                            TextView caCount = view.findViewById(R.id.taCount);
+                            taCount.setText(String.format(getResources().getString(R.string.ta_count),
                                     newCount));
                         }
                     }
