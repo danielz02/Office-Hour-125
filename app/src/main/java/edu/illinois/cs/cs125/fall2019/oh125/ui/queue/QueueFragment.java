@@ -8,20 +8,17 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.github.javafaker.Faker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.Locale;
+import java.util.Random;
 
 import edu.illinois.cs.cs125.fall2019.oh125.R;
 
@@ -44,6 +41,8 @@ public class QueueFragment extends Fragment {
 
         final LinearLayout queueList = getView().findViewById(R.id.queueList);
 
+        final String[] fakeNames = getResources().getStringArray(R.array.dummy_name);
+
         db.collection("queue")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -51,7 +50,8 @@ public class QueueFragment extends Fragment {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot qds: task.getResult()) {
-                                String name = "";
+                                int randInt = (int) (Math.random() * fakeNames.length);
+                                String name = fakeNames[randInt];
                                 String category = qds.getString("category");
                                 String estimatedTime = "Estimated: "
                                         + qds.getLong("estimatedTime") + "min";

@@ -17,7 +17,7 @@
     <string name="queue_request">Queue Request</string>
     <string name="ta_reserve">TA Reserve</string>
     <string name="staff_portal">Staff Portal</string>
-    <string name="com_nav_group">Stress Go Away!</string>
+    <string name="com_nav_group">Stress Go Away</string>
     <string name="here">I\'m at Office Hour</string>
 
     <string name="geoff_oh">Geoff\'s Office Hour: Wednesday and Friday 1\-3pm</string>
@@ -30,4 +30,21 @@
 
     <string name="logout">Logout</string>
     <string name="cancel">Cancel</string>
+
+    <string name="fake_name_api">http://svc.webservius.com/v1/CorbanWork/fakename</string>
+    
+    <string-array name="dummy_name">
+        <item>Denise G. Sanchez</item>
+        <item>Deborah C. Nadeau</item>
+        <item>Angela J. Howard</item>
+        <item>Erica D. Burgoyne</item>
+        <item>Theresa G. Davis</item>
+        <item>Mary E. Lightfoot</item>
+        <item>Jason S. Lewis</item>
+        <item>Elmer T. Lewis</item>
+        <item>Kenneth T. Franklin</item>
+        <item>Cathy G. Schmidt</item>
+        <item>Frances G. Cronin</item>
+    </string-array>
+
 </resources>

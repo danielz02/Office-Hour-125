@@ -280,66 +280,73 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
-
-        // Listener for any change in the total number of student at Office Hour
-        this.studentListener = db.collection("user")
-                .whereEqualTo("role", "Student")
-                .whereEqualTo("isAtOfficeHour", true)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots,
-                                        @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.w("Listen Error for Total Student Number", e);
-                        } else {
-                            int newCount = queryDocumentSnapshots.getDocuments().size();
-                            TextView studentCount = view.findViewById(R.id.studentCount);
-                            studentCount.setText(String.valueOf(newCount));
+        try {
+            // Listener for any change in the total number of student at Office Hour
+            this.studentListener = db.collection("user")
+                    .whereEqualTo("role", "Student")
+                    .whereEqualTo("isAtOfficeHour", true)
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots,
+                                            @Nullable FirebaseFirestoreException e) {
+                            if (e != null) {
+                                Log.w("Listen Error for Total Student Number", e);
+                            } else {
+                                int newCount = queryDocumentSnapshots.getDocuments().size();
+                                TextView studentCount = view.findViewById(R.id.studentCount);
+                                studentCount.setText(String.valueOf(newCount));
+                            }
                         }
-                    }
-                });
+                    });
 
-        // Listener for any change in the total number of TAs at Office Hour
-        this.taListener = db.collection("user")
-                .whereEqualTo("role", "TA")
-                .whereEqualTo("isAtOfficeHour", true)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots,
-                                        @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.w("Listen Error for Total TA Number", e);
-                        } else {
-                            int newCount = queryDocumentSnapshots.getDocuments().size();
-                            TextView taCount = view.findViewById(R.id.taCount);
-                            taCount.setText(String.format(getResources().getString(R.string.ta_count),
-                                    newCount));
+            // Listener for any change in the total number of TAs at Office Hour
+            this.taListener = db.collection("user")
+                    .whereEqualTo("role", "TA")
+                    .whereEqualTo("isAtOfficeHour", true)
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots,
+                                            @Nullable FirebaseFirestoreException e) {
+                            if (e != null) {
+                                Log.w("Listen Error for Total TA Number", e);
+                            } else {
+                                int newCount = queryDocumentSnapshots.getDocuments().size();
+                                TextView taCount = view.findViewById(R.id.taCount);
+                                taCount.setText(String.format(getResources().getString(R.string.ta_count),
+                                        newCount));
+                            }
                         }
-                    }
-                });
+                    });
 
 
-        // Listener for any change in the total number of CAs at Office Hour
-        this.caListener = db.collection("user")
-                .whereEqualTo("role", "CA")
-                .whereEqualTo("isAtOfficeHour", true)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots,
-                                        @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.w("Listen Error for Total CA Number", e);
-                        } else {
-                            final TextView taCount = view.findViewById(R.id.taCount);
-                            int newCount = queryDocumentSnapshots.getDocuments().size();
-                            TextView caCount = view.findViewById(R.id.caCount);
-                            caCount.setText(String.format(getResources().getString(R.string.ca_count),
-                                    newCount));
+            // Listener for any change in the total number of CAs at Office Hour
+            this.caListener = db.collection("user")
+                    .whereEqualTo("role", "CA")
+                    .whereEqualTo("isAtOfficeHour", true)
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots,
+                                            @Nullable FirebaseFirestoreException e) {
+                            if (e != null) {
+                                Log.w("Listen Error for Total CA Number", e);
+                            } else {
+                                int newCount = queryDocumentSnapshots.getDocuments().size();
+                                TextView caCount = view.findViewById(R.id.caCount);
+                                caCount.setText(String.format(getResources().getString(R.string.ca_count),
+                                        newCount));
+                            }
                         }
-                    }
-                });
+                    });
+        } catch (IllegalStateException e) {
+            Log.w("Listener Failed", e);
+        }
 
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Log.i("Debugging", "HomeFragment Detached");
     }
 
 
