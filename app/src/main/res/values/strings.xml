@@ -11,13 +11,13 @@
     <string name="menu_queue">Queue</string>
     <string name="menu_forecast">TA Forecast</string>
     <string name="menu_status">At 0403</string>
-    <string name="menu_share">Share</string>
+    <string name="menu_fun">Fun</string>
     <string name="menu_send">Send</string>
 
     <string name="queue_request">Queue Request</string>
     <string name="ta_reserve">TA Reserve</string>
     <string name="staff_portal">Staff Portal</string>
-    <string name="com_nav_group">Communicate</string>
+    <string name="com_nav_group">Stress Go Away</string>
     <string name="here">I\'m at Office Hour</string>
 
     <string name="geoff_oh">Geoff\'s Office Hour: Wednesday and Friday 1\-3pm</string>
@@ -26,7 +26,29 @@
     <string name="ca_count">CA: %1$d</string>
     <string name="ta_count">TA: %1$d</string>
     <string name="calendar_url">https://bit.ly/350L3nD</string>
+    <string name="transformer_url">https://talktotransformer.com/</string>
 
     <string name="logout">Logout</string>
     <string name="cancel">Cancel</string>
+
+    <string name="fake_name_api">http://svc.webservius.com/v1/CorbanWork/fakename</string>
+
+    <string name="notification_channel_id">100</string>
+    <string name="notification_channel_name">newStudentInQueue</string>
+    <string name="notification_description">Sent when a new student enters queue</string>
+    
+    <string-array name="dummy_name">
+        <item>Denise G. Sanchez</item>
+        <item>Deborah C. Nadeau</item>
+        <item>Angela J. Howard</item>
+        <item>Erica D. Burgoyne</item>
+        <item>Theresa G. Davis</item>
+        <item>Mary E. Lightfoot</item>
+        <item>Jason S. Lewis</item>
+        <item>Elmer T. Lewis</item>
+        <item>Kenneth T. Franklin</item>
+        <item>Cathy G. Schmidt</item>
+        <item>Frances G. Cronin</item>
+    </string-array>
+
 </resources>
