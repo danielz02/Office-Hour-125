@@ -1,8 +1,8 @@
 # Office-Hour-125
 Final Project for CS 125 @ Illinois in Fall 2019
 ## Author
-> Kary Wang
-> Daniel Zhang
+> + Kary Wang
+> + Daniel Zhang
 ## What we have done
 + A login system intergrated with FirebaseAuth and our customized database
 + Fully functional student queue
