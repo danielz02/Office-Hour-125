@@ -18,7 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Transaction;
 
 
-public class Family125 implements OfficeHourStatus {
+public abstract class Family125 implements OfficeHourStatus {
     /** The name of the person in Family125 instance. */
     private String name;
     /** The role of the person, either being student, instructor, CA, or TA. */
@@ -165,14 +165,19 @@ public class Family125 implements OfficeHourStatus {
                 switch (userRole) {
                     case "CA":
                         Log.i("CA instance initialized", task.getResult().toObject(CA.class).toString());
-                        Family125 result = task.getResult().toObject(CA.class);
-                        return Tasks.forResult(result);
+                        Family125 CA = task.getResult().toObject(CA.class);
+                        return Tasks.forResult(CA);
+                    case "TA":
+                        Log.i("TA instance initialized", task.getResult().toObject(CA.class).toString());
+                        Family125 TA = task.getResult().toObject(TA.class);
+                        return Tasks.forResult(TA);
                     case "Student":
                         final Student toReturn = task.getResult().toObject(Student.class);
                         Log.i("Student instance initialized", toReturn.toString());
                         return toReturn.initializeQueueInfo();
                     default:
-                        return Tasks.forResult(task.getResult().toObject(Family125.class));
+                        Family125 unknown = task.getResult().toObject(Student.class);
+                        return Tasks.forResult(unknown);
                 }
             }
         }).continueWith(new Continuation<Family125, Family125>() {
@@ -182,29 +187,5 @@ public class Family125 implements OfficeHourStatus {
             }
         });
 
-        /**
-        .continueWith(new Continuation<Family125, Family125>() {
-            @Override
-            public Family125 then(@NonNull Task<Family125> task) {
-                if (task.getResult() instanceof Student) {
-                    ((Student) task.getResult()).initializeQueueInfo()
-                            .addOnCompleteListener(new OnCompleteListener<Student>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Student> task) {
-                                    Log.i("Student QueueInfo Initialized",
-                                            task.getResult().getQueueInfo().toString());
-                                }
-                            }).continueWith(new Continuation<Student, Student>() {
-                                @Override
-                                public Student then(@NonNull Task<Student> task) {
-                                    return task.getResult();
-                                }
-                            });
-                } else {
-                    return task.getResult();
-                }
-            }
-        });
-         */
     }
 }

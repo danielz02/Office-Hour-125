@@ -29,6 +29,7 @@ import edu.illinois.cs.cs125.fall2019.oh125.QueueInfo;
 import edu.illinois.cs.cs125.fall2019.oh125.R;
 import edu.illinois.cs.cs125.fall2019.oh125.Student;
 import edu.illinois.cs.cs125.fall2019.oh125.Summary;
+import edu.illinois.cs.cs125.fall2019.oh125.TA;
 
 public class StaffPortal extends AppCompatActivity {
     @Override
@@ -38,19 +39,33 @@ public class StaffPortal extends AppCompatActivity {
 
         // Get Current CA Email
         String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        CA.getInstance(email).addOnCompleteListener(new OnCompleteListener<Family125>() {
+        Family125.getInstance(email).addOnCompleteListener(new OnCompleteListener<Family125>() {
             @Override
             public void onComplete(@NonNull Task<Family125> task) {
                 if (task.isSuccessful()) {
-                    CA ca = (CA) task.getResult();
-                    // Get list of students in Queue
-                    ca.getQueue().addOnSuccessListener(new OnSuccessListener<List<Student>>() {
-                        @Override
-                        public void onSuccess(List<Student> students) {
-                            Log.i("CA get queue", students.toString());
-                            loadTasks(students);
-                        }
-                    });
+                    Family125 unknown = task.getResult();
+                    if (unknown instanceof CA) {
+                        CA ca = (CA) unknown;
+                        // Get list of students in Queue
+                        ca.getQueue().addOnSuccessListener(new OnSuccessListener<List<Student>>() {
+                            @Override
+                            public void onSuccess(List<Student> students) {
+                                Log.i("CA get queue", students.toString());
+                                loadTasks(students);
+                            }
+                        });
+                    } else if (unknown instanceof TA) {
+                        TA ta = (TA) unknown;
+                        ta.getQueue().addOnSuccessListener(new OnSuccessListener<List<Student>>() {
+                            @Override
+                            public void onSuccess(List<Student> students) {
+                                Log.i("TA get queue", students.toString());
+                                loadTasks(students);
+                            }
+                        });
+                    }
+
+
                 } else {
                     Log.w("CA getQueue Failed", task.getException());
                 }
