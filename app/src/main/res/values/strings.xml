@@ -32,6 +32,10 @@
     <string name="cancel">Cancel</string>
 
     <string name="fake_name_api">http://svc.webservius.com/v1/CorbanWork/fakename</string>
+
+    <string name="notification_channel_id">100</string>
+    <string name="notification_channel_name">newStudentInQueue</string>
+    <string name="notification_description">Sent when a new student enters queue</string>
     
     <string-array name="dummy_name">
         <item>Denise G. Sanchez</item>
