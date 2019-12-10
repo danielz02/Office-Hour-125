@@ -10,9 +10,9 @@
     <string name="menu_home">Home</string>
     <string name="menu_queue">Queue</string>
     <string name="menu_forecast">TA Forecast</string>
-    <string name="menu_status">At 0403</string>
+    <string name="menu_status">CA Forecast</string>
     <string name="menu_fun">Fun</string>
-    <string name="menu_send">Send</string>
+    <string name="menu_send">Under Development</string>
 
     <string name="queue_request">Queue Request</string>
     <string name="ta_reserve">TA Reserve</string>
