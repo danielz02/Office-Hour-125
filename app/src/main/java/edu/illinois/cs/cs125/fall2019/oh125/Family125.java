@@ -18,7 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Transaction;
 
 
-public abstract class Family125 implements OfficeHourStatus {
+public class Family125 implements OfficeHourStatus {
     /** The name of the person in Family125 instance. */
     private String name;
     /** The role of the person, either being student, instructor, CA, or TA. */
