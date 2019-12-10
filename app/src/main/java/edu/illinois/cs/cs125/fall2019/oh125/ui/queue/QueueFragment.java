@@ -51,7 +51,7 @@ public class QueueFragment extends Fragment {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot qds: task.getResult()) {
                                 int randInt = (int) (Math.random() * fakeNames.length);
-                                String name = fakeNames[randInt];
+                                String name = "  " + fakeNames[randInt];
                                 String category = qds.getString("category");
                                 String estimatedTime = "Estimated: "
                                         + qds.getLong("estimatedTime") + "min";
