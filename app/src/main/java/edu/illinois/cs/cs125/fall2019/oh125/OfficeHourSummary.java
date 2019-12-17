@@ -13,31 +13,31 @@ public interface OfficeHourSummary {
      * This method involves i Firebase Firestore request.
      * @return the total number of students present at Office Hour
      */
-    public Task<Integer> getTotalStudent();
+    Task<Integer> getTotalStudent();
 
     /**
      * This method involves in Firebase Firestore request.
      * @return the total number of CA present at Office Hour.
      */
-    public Task<Integer> getTotalCA();
+    Task<Integer> getTotalCA();
 
     /**
      * This method involves in Firebase Firestore request.
      * @return the total number of TAs present at Office Hour.
      */
-    public Task<Integer> getTotalTA();
+    Task<Integer> getTotalTA();
 
     /**
      * This method involves in Firestore request and return a list containing the information about
      * current queue.
      * @return an Android task of a list of all QueueInfo items
      */
-    public Task<List<QueueInfo>> getQueue();
+    Task<List<QueueInfo>> getQueue();
 
     /**
      * This method helps create change listener according to user input
      * @param type the number of student/CA/TA you want to register listener for
      * @return a listener for the input type
      */
-    public ListenerRegistration getChangeListener(String type);
+    ListenerRegistration getChangeListener(String type);
 }

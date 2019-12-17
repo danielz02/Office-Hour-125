@@ -19,16 +19,16 @@ interface SendQueue {
      * @throws IllegalArgumentException when category is not either MP or Homework
      * @throws FileAlreadyExistsException when current student already has an entry of QueueInfo
      */
-    public Task<Void> enterQueue(String category,
-                                 int estimatedTime,
-                                 int table) throws IllegalArgumentException, FileAlreadyExistsException;
+    Task<Void> enterQueue(String category,
+                          int estimatedTime,
+                          int table) throws IllegalArgumentException, FileAlreadyExistsException;
 
     /**
      * Delete current student's record in the queue
      * @return An Android task of type Void
      * @throws FileNotFoundException when current user doesn't even have a QueueInfo instance
      */
-    public Task<Void> exitQueue() throws FileNotFoundException;
+    Task<Void> exitQueue() throws FileNotFoundException;
 }
 
 /**
@@ -40,14 +40,14 @@ interface ManageQueue {
      * Please resister a listen for callback after the web request is complete.
      * @return an asynchronous operation which obtains Student instances in queue database
      */
-    public Task<List<Student>> getQueue();
+    Task<List<Student>> getQueue();
 
     /**
      * End one student's queue status.
      * Used at the end of one CA session.
      * @param student the Student instance to be kicked out from the queue
      */
-    public Task<Void> endQueue(Student student);
+    Task<Void> endQueue(Student student);
 }
 
 /**
@@ -59,5 +59,5 @@ interface OfficeHourStatus {
      * This method will update the Firestore database according to current instance's isAtOfficeHour
      * @return an Android Task of Void type
      */
-    public Task<Void> updateOfficeHourStatus();
+    Task<Void> updateOfficeHourStatus();
 }
