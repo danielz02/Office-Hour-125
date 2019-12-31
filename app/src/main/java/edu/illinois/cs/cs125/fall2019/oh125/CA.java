@@ -75,6 +75,11 @@ public class CA extends Family125 implements ManageQueue {
                 });
     }
 
+    /**
+     * Modify the assignedCA field of a QueueInfo document given student's NetID
+     * @param netId the ID of the QueueInfo document (also student's NetID) to be updated
+     * @return an async operation
+     */
     public Task<Void> takeTask(String netId) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         return db.collection("queue")
@@ -90,7 +95,36 @@ public class CA extends Family125 implements ManageQueue {
                         }
                     }
                 });
+    }
 
+    /**
+     * Loop through queue database to obtain queue tasks that are assigned to current user
+     * @return an async operation which contains user's current task
+     */
+    public Task<List<QueueInfo>> getTaskList() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        return db.collection("queue")
+                .whereEqualTo("assignedCA", this.getNetId())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Log.i("Fetching QueueInfo List Succeed!",task.getResult().toString());
+                        } else {
+                            Log.w("Fetch QueueInfo List Failed!", task.getException());
+                        }
+                    }
+                }).continueWith(new Continuation<QuerySnapshot, List<QueueInfo>>() {
+                    @Override
+                    public List<QueueInfo> then(@NonNull Task<QuerySnapshot> task) throws Exception {
+                        List<QueueInfo> queueInfoList = new ArrayList<>();
+                        for (QueryDocumentSnapshot documentSnapshot: task.getResult()) {
+                            queueInfoList.add(documentSnapshot.toObject(QueueInfo.class));
+                        }
+                        return queueInfoList;
+                    }
+                });
     }
 
     /**
