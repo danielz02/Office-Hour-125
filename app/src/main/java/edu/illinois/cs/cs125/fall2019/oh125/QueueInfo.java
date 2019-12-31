@@ -3,6 +3,7 @@ package edu.illinois.cs.cs125.fall2019.oh125;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,6 +25,9 @@ public class QueueInfo {
     private int table;
     /** The unix timestamp of the time when the student entered the queue. */
     private Timestamp timeEntered;
+    /** The NetID of the CA who has taken the task. */
+    @Nullable
+    private String assignedCA;
 
     /** The dummy constructor for Firebase Firestore. */
     public QueueInfo() {
@@ -42,6 +46,7 @@ public class QueueInfo {
         this.estimatedTime = estimatedTime;
         this.table = tableNumber;
         this.timeEntered = timeEntered;
+        this.assignedCA = null;
     }
 
     public String getCategory() {
@@ -63,6 +68,10 @@ public class QueueInfo {
     public String getHumanTime() {
         DateFormat formatter =  DateFormat.getTimeInstance(DateFormat.SHORT, Locale.ENGLISH);
         return formatter.format(this.timeEntered.toDate());
+    }
+
+    public String getAssignedCA() {
+        return this.assignedCA;
     }
 
     @Override @NonNull

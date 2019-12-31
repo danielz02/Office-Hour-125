@@ -39,10 +39,11 @@ public class CA extends Family125 implements ManageQueue {
     /**
      * This method will send request to Firestore to obtain all Student instances in a List.
      * Please resister a listen for callback after the web request is complete.
+     * TODO: Fix the bug in the async call
      *
      * @return an asynchronous operation which obtains Student instances in queue database
      */
-    @Override
+    @Override @Deprecated
     public Task<List<Student>> getQueue() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         return db.collection("user")
@@ -72,6 +73,24 @@ public class CA extends Family125 implements ManageQueue {
                         return studentsInQueue;
                     }
                 });
+    }
+
+    public Task<Void> takeTask(String netId) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        return db.collection("queue")
+                .document(netId)
+                .update("assignedCA", netId)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.i("Update CA Assignment Succeed", task.getResult().toString());
+                        } else {
+                            Log.w("Update CA Assignment Failed", task.getException());
+                        }
+                    }
+                });
+
     }
 
     /**

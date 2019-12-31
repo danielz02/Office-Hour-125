@@ -33,6 +33,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -125,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
                                     Toast.LENGTH_LONG).show();
                             setUpUi();
                             newQueueNotification();
+                            queueStatusUpdateNotification();
                             Log.i("Current User Info Query Succeed", user.toString());
                         } else {
                             Log.w("User Info Query Failed", task.getException());
@@ -309,6 +311,53 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+    private void queueStatusUpdateNotification() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        final PendingIntent pendingIntent = PendingIntent.getActivity(this,
+                0, intent, 0);
+        final NotificationCompat.Builder builder = new NotificationCompat.Builder(
+                this, getString(R.string.notification_channel_id))
+                .setSmallIcon(R.drawable.cs125)
+                .setContentTitle("You have been assigned a CA")
+                .setContentText("Go to check out!")
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText("Please go talk to him/her!"))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+
+        Log.i("Notification in Process", "processing");
+        if (this.user instanceof Student && this.user.getIsAtOfficeHour()) {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("queue").document(this.user.getNetId())
+                    .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable DocumentSnapshot documentSnapshot,
+                                            @Nullable FirebaseFirestoreException e) {
+                            if (e != null) {
+                                Log.w("QueueInfo listener failed", e);
+                                return;
+                            }
+                            if (documentSnapshot != null && documentSnapshot.exists()) {
+                                Log.i("Current QueueInfo Changed: ", documentSnapshot.toString());
+                                createNotificationChannel();
+                                NotificationManagerCompat notificationManager =
+                                        NotificationManagerCompat.from(MainActivity.this);
+                                // notificationId is a unique int for each notification that you must define
+                                notificationManager.notify(5, builder.build());
+                                Log.i("Notification succeed", "sent!");
+                            } else {
+                                Log.i("Current QueueInfo Not Found: ", "User not in queue");
+                            }
+                        }
+                    });
+        }
+    }
+
+
+
     private void createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
